@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!--
+CLASSES USED:
+	bannerArea: attached to <div>
+		div containing banner elements
+		
+	bannerImage: attached to <img>
+		refers to the banner image used at the top of the screen
+	
+	bannerButton: attached to <button>
+		refers to the buttons on the banner
+		
+		ids:
+			login, viewQuestions, viewFAQ
+
+	QAMessageArea: attached to <div>
+		textarea where a question is entered
+		ids:
+			askQuestionForm
+
+	QAForm: attached to <form>
+		form where a question or a question's response is input
+	
+	displayText: attached to <div>
+		div that holds elements that display text, mainly the question asked.
+	
+-->
+<html>
+	<head>
+		<title>Respond</title>
+		<link rel="stylesheet" type="text/css" href="/css/BeAll.css">
+	</head>
+	
+	<body>
+
+		<h1 id="SysName">By Default</h1>
+		<!-- banner -->
+		<div class="bannerArea">
+			Welcome {{accountname}}
+			<form action='/logout' method='GET'><input class="bannerButton" type="submit" value="Logout"/></form>
+			<form action='/review' method='post'><input disabled class="bannerButton" type="submit" value="View Questions"/></form>
+			<form action='/faq' method='GET'><input disabled class="bannerButton" type="submit"  value="View FAQ"/></form>
+		</div>
+
+		<h2 id="Resp">Respond to {{question.senderUID.get().username}}'s question</h2>
+		
+		<!-- show question to be answered -->
+		<div class="displayText" id="display_user_question">
+			Question: <br>
+			<!--<textarea style="resize:none" name="displayQuestion" disabled>{{question.message}}</textarea>-->
+			<p>
+				{{question.message}}
+			</p>
+		</div>
+		
+		<!-- area where text will be entered for QA -->
+		<div class="QAMessageArea" id="manualResponse">
+			<br>
+			<table>
+				<tr><th>Catagory</th><th> - or - </th><th>New Category</th></tr>
+				<tr>
+					<td>
+						<!-- Category Area -->
+						<select id="catagory" form="manual_response" name="cname">
+							<option value="none"></option>
+							<option value="newCategory"> -- New Catagory -- </option>
+							{%if categories%}
+								{%for c in categories%}
+									<option value="{{c.name}}">{{c.name}}</option>
+								{%endfor%}
+							{%endif%}
+						</select>
+					</td>
+					<td>
+						<!-- Empty cell -->
+					</td>
+					<td>
+						<input type="text" name="new_cname" form = "manual_response"/>
+					</td>
+				</tr>
+				<tr><th>Response</th></tr>
+				<tr>
+					<form class="QAForm" id="manual_response" action="/respond" method="post">
+						<textarea style="resize:none" name="response" form="manual_response" rows="4" cols="50"></textarea><br>
+						<input type="submit" value="Submit Response"/>
+					</form>
+				</tr>
+				
+			</table>
+			
+		</div>
+	</body>
+</html>

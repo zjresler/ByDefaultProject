@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>New Student</title>
+<link type="text/css" rel="stylesheet" href="../css/BeAll.css">
+</head>
+
+<body>
+<h1> Add New Student Accounts </h1>
+<h2><i>{{usertype}} </i> privileges</h2>
+<br/>
+
+{% if status == 'initial' %}
+<div class="QAMessageArea">
+	<form action="/addstudent" method="POST">
+	<fieldset>
+	<legend>Add Email Addresses of Students</legend> 
+		<h3 id="addstudents">Add students here</h3>
+			<textarea 	style="resize:none" 
+						name="textArea" 
+						rows="10" cols="50"
+						placeholder='Add multiple email addresses separated by commas'
+						autofocus>
+			</textarea>
+			<br/>
+			Class Name: <input type = "text" name="class">
+			{% if usertype == 'admin' %}
+			<br>
+			Choose instructor for the class:
+			<select name="instructorAssigned">
+				{% for instructor in instructors %}
+  				<option value="{{instructor}}">{{instructor.username}}</option> 
+  				{% endfor %}
+			</select>
+			<br>
+			{% endif %}
+		</fieldset>
+			<input type="submit" value="Submit">
+	</form>
+	<form action='/registrationhomepage'>
+		<input type='submit' value='Home, Account Administration'>
+	</form>
+{% endif %}
+{% if blankAddy %}
+	<form action="/addstudent">
+		<p id='Blank'><Strong>Email addresses</Strong> cannot have a blank value. Please retry.</p>
+		<input type='submit' value='Press to Continue'>
+	</form>
+{% endif %}
+{% if classNameSize == 0 %}
+	<form action="/addstudent">
+		<p id='Blank'><Strong>Class names</Strong> cannot be blank. Please retry.</p>
+		<input type='submit' value='Press to Continue'>
+	</form>
+{% endif %}
+</div>
+

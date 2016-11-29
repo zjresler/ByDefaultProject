@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head><title>Add New Instructor</title>
+<link type="text/css" rel="stylesheet" href="../css/BeAll.css">
+</head>
+<body>
+<h1> Account Administration </h1>
+<h2> Add New Instructor </h2>
+<br/></br/>
+
+{% if outcome == 'undecided' %}
+<form action="/addinstructor" method="POST" class="formANI">
+<fieldset>
+<legend>Personal Information</legend>
+<label class="labelANI" for="firstname" placeholder="First Name">First Name</label><input id="inputANI" type='text' name='firstname' value=""><br />
+<label class="labelANI" for="lastname" placeholder="Last Name">Last Name</label><input id="inputANI" type='text' name='lastname' value="">
+<br/>
+<label class="labelANI" for="emailaddress" placeholder="Email Address">Email Address</label><input id="inputANI" type='text' name='emailaddress' value="">
+<br class="clearANI" />
+</fieldset>
+<input type = "submit" value = "Submit">
+</form>
+
+<form action = '/registrationhomepage'>
+<input type = "submit" value = "Return to the Main Menu, Account Administration">
+</form>
+
+{% elif outcome == 'duplicate' %}
+	<form action="/addinstructor">
+	<p1 id='Duplicate'><br />Account has already been created with {{ email }}. Please try again.</p1><br />
+	<input type = "submit" value = "Press button to continue">
+	</form>
+{% elif outcome == 'unique' %}
+	<form action="/addinstructor">
+	<p1 id='Unique'><br />New account created.<br />Account name: {{ email }}<br />Temporary password: {{ password }}<br /></p1>
+	<input type = "submit" value="Press button to continue">
+	</form>
+{% elif outcome == 'blankEmailAddress' %}
+	<form action="/addinstructor">
+	<p1 id='Blank'><br /><i>{{ outcome }}</i> error. Please try again. All fields must be entered.<br /></p1>
+	<input type = "submit" value="Press button to continue">
+	</form>
+{% elif outcome == 'blankFirstName' %}
+	<form action="/addinstructor">
+	<p1 id='Blank'><br /><i>{{ outcome }}</i> error. Please try again. All fields must be entered.<br /></p1>
+	<input type = "submit" value="Press button to continue">
+	</form>
+{% else %}
+	<form action="/addinstructor">
+	<p1 id='Blank'><br /><Strong>{{ outcome }}</Strong> error. Please try again. All fields must be entered.<br /></p1>
+	<input type = "submit" value="Press button to continue">
+	</form>
+{% endif %}
+</body>
+</html>

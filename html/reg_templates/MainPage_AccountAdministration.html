@@ -1,0 +1,59 @@
+<head>
+<link type="text/css" rel="stylesheet" href="../css/BeAll.css">
+</head>
+
+<body>
+<h1><strong>MAIN PAGE - Account Administration</strong></h1>
+
+{% if accounttype == 'admin' or accounttype == 'instructor' %}
+<h2> Add/Edit Users </h2>
+{% endif %}
+<h3> Welcome, <i>{{ account }}</i>, Account type: <i>{{ accounttype }}</i></h3>
+<br>
+<div class="Administrative-Main-Menu">
+{% if accounttype == 'admin' %}
+<form action='/addinstructor'>
+    <input id="addInstructor" type="submit" name="addInstructor" value="SELECT"><strong> Add New Instructor </strong>
+    <br>
+</form>
+
+<form action='/editinstructor'>
+    <input id="editInstructor" type="submit" name="editInstructor" value="SELECT"><strong> Edit Instructor User Information </strong>
+    <br>
+</form>
+{% endif %}
+
+{% if accounttype == 'admin' or accounttype == 'instructor' %}
+<form action='/addstudent'>
+    <input type="submit" name="addStudent" value="SELECT"><strong> Add New Student </strong>
+    <br>
+</form>
+
+<form action='/editstudent'>
+    <input id="studentEdit" type="submit" name="toStudentEdit" value="SELECT"><strong> Edit Student User Information ***not yet implemented ***</strong>
+    <br />
+</form>
+{% endif %}
+
+{% if accounttype == 'student' or accounttype == 'instructor' %}
+<form action='/editpersonalinformation'>
+    <input type="submit" value="SELECT"><strong> Edit Personal Information </strong>
+    <br>
+</form>
+{% endif %}
+
+{% if accounttype == "instructor" %}
+<form action='/studenthomepage'>
+    <input id="returnToHome" type="submit" value="SELECT"><strong> Return to the Instructor Home Page </strong>
+    <br>
+</form>
+{% elif accounttype == "student" %}
+<form action='/studenthomepage'>
+    <input id="returnToHome" type="submit" value="SELECT"><strong> Return to the Student Home Page </strong>
+    <br>
+</form>
+{% endif %}
+
+</div>
+
+

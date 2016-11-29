@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>admin page</title></head>
+<body>
+Create new user:
+
+<form action='/admin' method='POST' id='userform'>
+
+
+			User Name: <br>
+			<input  type ="text" name="username" /><br>
+
+			First Name: <br>
+			<input  type ="text" name="firstname"/><br>
+
+			Last Name: <br>
+			<input  type="text" name="lastname"/><br>
+
+			Email: <br>
+			<input  type="text" name="email"/><br>
+
+			Password:<br>
+			<input type="text" name="password"/><br>
+
+
+<input type="submit" id="login" value="submit">
+
+</form>
+
+<select name="accounttype" form="userform">
+  <option value="student">student</option>
+  <option value="instructor">instructor</option>
+  <option value="admin">admin</option>
+
+</select>
+
+
+
+</body>
+
+</html>
