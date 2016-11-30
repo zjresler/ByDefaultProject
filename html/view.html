@@ -1,0 +1,33 @@
+<head>
+  
+  <title>
+  View classes</title>
+<link href="/css/faq.css"  rel="stylesheet" type="text/css"/>
+<h1 id="SysName">By Default</h1>
+
+</head>
+<body>
+  
+
+  <div class="bannerArea">
+             <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
+        Logged in as:  {{ accountname }}
+        <form action='/logout' method='GET'><input type="submit" value="Logout"></form>
+        <form {{homeargs}} method='GET'><input type="submit" value="Home"></form>
+        <form action='/faq' method='GET'><input type="submit"  value="View FAQ"></form>
+    </div>
+
+
+<form action='/faq' method = 'POST'>
+<select name="Class">
+
+      {% for c in class%}
+      <option value="{{c.classname}}">{{c.classname}} </option>
+	
+      {%endfor%}
+</select>
+
+<input type = 'submit' value='View FAQ'/>
+</form>
+
+</body>

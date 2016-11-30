@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>Enroll user in Class</title>
+<link href="/css/faq.css"  rel="stylesheet" type="text/css"/>
+<h1 id="SysName">By Default</h1>
+
+</head>
+<body>
+<form action='/enroll' method = 'POST'>
+<select name="Class">
+
+      {% for c in class%}
+      <option value="{{c.classname}}">{{c.classname}} </option>
+	
+      {%endfor%}
+</select>
+<select name="User">
+
+      {% for u in users%}
+      <option value="{{u.username}}">{{u.username}} </option>
+	
+      {%endfor%}
+</select>
+
+<input type = 'submit' value='Enroll'/>
+</form>
+</body>

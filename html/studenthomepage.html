@@ -1,0 +1,35 @@
+<!--
+    additions to CSS:
+
+ css for classLink can just be a copy paste of the "question" class
+-->
+
+
+<html>
+<head>
+<title>Home Page</title>
+    <link rel="stylesheet" type="text/css" href="/css/BeAll.css">
+</head>
+    <body>
+    
+<h1 id="SysName">By Default</h1>
+    <div class="bannerArea">
+        <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
+        Welcome {{accountname}}
+        <form action='/logout' method='GET'><input class="bannerButton" type="submit" value="Logout"></form>
+        {% if accouttype == 'instructor'%}
+        <form action='/review' method='post'><input  class="bannerButton" type="submit" value="View Questions"></form>
+        {% endif %}
+        <form action='/faq' method='GET'><input  class="bannerButton" type="submit"  value="View FAQ"></form>
+
+    </div>
+    <h2 id="homeTitle">Home Page</h2>
+		{%for c in classlist%}
+        <!-- css for classLink can just be a copy paste of the "question" class -->
+			<form class="classLink" action="{{path}}" method="{{method}}">
+				<input type = "hidden" name="class" value="{{c.classname}}">
+				<input type = "submit" name="class" value = "{{c.classname}}"><br>
+			</form>
+		{%endfor%}
+    </body>
+</html>

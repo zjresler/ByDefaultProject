@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+CLASSES USED:
+	bannerArea: attached to <div>
+		div containing banner elements
+		
+	bannerImage: attached to <img>
+		refers to the banner image used at the top of the screen
+	
+	bannerButton: attached to <button>
+		refers to the buttons on the banner
+		
+		ids:
+			login, viewQuestions, viewFAQ
+
+	QAMessageArea: attached to <div>
+		textarea where a question is entered
+		ids:
+			askQuestionForm
+
+	QAForm:
+		form where a question or a question's response is input
+-->
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="../css/BeAll.css">
+</head>
+<body>
+
+	<h1 id="SysName">By Default</h1>
+	<!-- banner -->
+	<div class="bannerArea">
+             <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
+                 Welcome {{accountname}}
+                <form action='/logout' method='GET'><input type="submit" value="Logout"></form>
+                <form action='/PastQA' method='GET'><input type="submit" value="View Questions"></form>
+                <form action='/studenthomepage' method='GET'><input type="submit"  value="Home"></form>
+                <form action='/faq' method='GET'><input type="submit"  value="View FAQ"></form>
+    </div>
+
+
+	
+	
+	<!--<div class="pDescrip">Enter your question into the field below and hit submit to send your professor a question.</div>-->
+	
+	<div class="QAMessageArea">
+		{{accountname}}
+		<form class="QAForm" action="/ask" method="post" id="askQuestionForm">
+		<h2 id="AskTitle">Ask your professor a question</h2>
+			Question:<br>
+			<textarea style="resize:none" name="message" form="askQuestionForm" rows="4" cols="50"></textarea><br>
+			<input type = "hidden" name="classname" value="{{classname}}"/>
+			<input type="submit" value="Submit">
+		</form>
+	</div>
+
+
+
+</body>
+</html>

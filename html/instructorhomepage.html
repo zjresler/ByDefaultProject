@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html lang = "en">
+  <head>
+    <title>Instructor Home Page</title>
+    <meta charset = "UTF-8" />
+	<link type="text/css" rel="stylesheet" href="/css/BeAll.css">
+  </head>
+  <body>
+	<h1 id="SysName">By Default</h1>
+    <h1 id="Registration_Page">Instructor Home Page</h1>
+    Welcome {{accountname}}         <form action='/logout' method='GET'><input type="submit" value="Logout"></form>
+        <form action='/review' method='GET'><input type="submit" value="View Questions"></form>
+        <form action='/faq' method='GET'><input type="submit"  value="View FAQ"></form>
+   
+        <legend id ="options">Options:</legend>
+        <p>
+            
+        <p>
+            <form action='/review' method='post'>
+				<input type="submit" value="Review new questions">
+			</form>
+
+        </p>
+		
+        <p>
+            <form action='/faq' method='GET'>
+				<input type="submit" value="Edit/View/Delete Frequently Asked Questions">
+			</form>
+                
+        </p>
+		
+        <p>
+            <form action='/register' method='GET'>
+				<input type="submit" value="Register a new student to the system">
+			</form>
+                
+        </p>
+        
+  
+  </body>
+</html>

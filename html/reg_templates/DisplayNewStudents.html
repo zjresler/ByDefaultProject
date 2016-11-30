@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+h1,h2,h3 { text-align: center; }
+
+td, th {
+    border: 2px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+footer {
+	position: relative;
+	bottom: 0px;
+}
+</style>
+
+<h1>Student Accounts</h1>
+<h2>List of New Accounts Activated</h2>
+<h3>Class: {{ class }}</h3>
+
+</head>
+<body>
+
+<table>
+  <tr>
+    <th>Email Address</th>
+    <th>Temporary Password</th>
+  </tr>
+  {% for entry in log %}
+  <tr>
+    <td>{{ entry[0] }}</td>
+    <td>{{ entry[1] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<br>
+<form action='/registrationhomepage'>
+    <input id="toHome" type="submit" value=""><strong>Return to ACCOUNT ADMINISTRATION</strong>
+</form>
+</body>
+<footer>Retain for your records: Password information necessary for the users' initial login.</footer>
+</html>

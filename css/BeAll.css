@@ -1,0 +1,189 @@
+body{
+	font-family: Rockwell;
+    background-color: lightblue;
+}
+#SysName{
+	border-style: solid;
+	border-color: rgb(0,120,255);
+	background-color: rgb(0,120,255);
+	color: white;
+}
+#Reg{
+	margin-bottom: 20px;
+	margin-left: 10px;
+    padding: 12px 20px;
+    margin: 8px 15px;
+    box-sizing: border-box;
+}
+#Regform{
+	position: fixed;
+	border-left: ridge;
+	margin: 8px 40px;
+	padding-left: 10px;
+	margin-top: 100px;
+}
+#Registration_Page{
+	position: fixed;
+	border-bottom: ridge;
+	margin-left: 50px;
+	margin-top: 30px;
+}
+#title{
+	position: fixed;
+	margin-left: 50px;
+	margin-top: -50px;
+	border-bottom: ridge;
+}
+#AskTitle{
+	position: fixed;
+	margin-top: -50px;
+	border-bottom: ridge;
+}
+#login{
+	margin-bottom: 20px;
+	padding: 10px 20px;
+}
+#container{
+	position: fixed;
+	border-bottom-style: ridge;
+	position: fixed;
+	left: 45%;
+	top:45%;
+	margin-left: -100px;
+	margin-top: -100px;
+	border-bottom: ridge;
+	
+}
+#inReg{
+	margin-bottom: 20px;
+	margin-left: 10px;
+    padding: 12px 20px;
+    margin: 8px 15px;
+    box-sizing: border-box;
+}
+button{
+	margin-bottom: 20px;
+	padding: 10px 20px;
+}
+.bannerArea{
+	position: absolute;
+	right: 5%;
+}
+#askQuestionForm{
+	position: fixed;
+	border-bottom-style: ridge;
+	position: fixed;
+	left: 45%;
+	top:45%;
+	margin-left: -100px;
+	margin-top: -100px;
+	margin-bottom: 20px;
+	padding: 10px 20px;
+}
+.form_ANI{
+	width: 400px; 
+	border: 2px solid red;
+    border-radius: 4px;
+}
+
+.labelANI{
+	float: left; 
+	width: 150px;
+}
+.inputANI{
+	float: left; 
+	width: 350px;
+}
+.clearANI{ 
+	clear: both; 
+	height: 0; 
+	line-height: 0; 
+}
+.loginSubmit{
+	input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.loginSubmit:hover {
+    background-color: #45a049;
+}
+
+.questionAnswerArea{
+	border-left: ridge;
+	margin: 8px 40px;
+	padding-left: 10px;
+	margin-top: 125px;
+}
+.question{
+	margin-bottom: 20px;
+	padding: 10px 20px;
+}
+#FAQ{
+	position: fixed;
+	border-bottom: ridge;
+	margin-left: 60px;
+	margin-top: 30px;
+}
+#FAQResponseSelect{
+	margin-bottom: 20px;
+	padding: 10px 20px;
+}
+.QAForm{
+	
+	margin-bottom: 20px;
+	padding-top: 10px ;
+}
+#manualResponse{
+	position: fixed;
+	margin-left: 60px;
+	margin-top: 200px;
+}
+#catagory{
+	margin-bottom: 20px;
+}
+#FAQResponse{
+	position: fixed;
+	margin-left: 60px;
+	margin-top: 225px;
+}
+#FAQResponseSelect{
+	margin-top: 20px;
+}
+.displayText{
+	position: fixed;
+	margin-bottom: 20px;
+	padding: 10px 20px;
+	margin-left: 75px;
+	margin-top: 75px;
+}
+#Resp{
+	position: fixed;
+	border-bottom: ridge;
+	margin-left: 60px;
+}
+#responseType{
+	position: fixed;
+	border-bottom: ridge;
+	margin-left: 60px;
+	margin-top: 175px;
+}
+#Duplicate{
+	color: red;
+	background-color: gray;
+}
+#Blank{
+	color: red;
+	background-color: gray;
+}
+
+#Unique{
+	color: blue;
+	background-color: gray;
+}

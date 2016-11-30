@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{title}}</title>
+	<link rel="stylesheet" type="text/css" href="../css/BeAll.css">
+</head>
+<body>
+	<h1 id="SysName">By Default</h1>
+
+	<div class="bannerArea">
+             <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
+        Logged in as:  {{ accountname }}
+        <form action='/logout' method='GET'><input type="submit" value="Logout"></form>
+        <form action='/studenthomepage' method='GET'><input type="submit" value="Home"></form>
+        <form action='/faq' method='GET'><input type="submit"  value="View FAQ"></form>
+    </div>
+	<h2 id="FAQ">Review Past Questions and Answers Questions </h2>
+	
+
+	<table class="questionAnswerArea">
+		{%for q in questions %}
+		<tr class="question">
+				
+			<th>Question: </th>
+				
+				<td>{{ q.message }}</td>
+				
+			<th>Resposne: </th>
+				
+				<td>{{ q.response }}</td>
+				
+		</tr>
+		{%endfor%}
+		
+	</table>
+
+</body>
+</html>

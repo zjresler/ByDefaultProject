@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!--
+CLASSES USED:
+	bannerArea: attached to <div>
+		div containing banner elements
+		
+	bannerImage: attached to <img>
+		refers to the banner image used at the top of the screen
+	
+	bannerButton: attached to <button>
+		refers to the buttons on the banner
+		
+		ids:
+			login, viewQuestions, viewFAQ
+
+	question:
+		refers to a link to a web page
+-->
+<html>
+<head>
+	<title>{{title}}</title>
+	<link rel="stylesheet" type="text/css" href="/css/BeAll.css">
+</head>
+<body>
+	<h1 id="SysName">By Default</h1>
+	<h2 id="FAQ">Review Open Questions</h2>
+	<div class="bannerArea">
+        <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
+        Welcome {{accountname}}
+        <form action='/logout' method='GET'><input class="bannerButton" type="submit" value="Logout"></form>
+        <form action='/review' method='post'><input disabled class="bannerButton" type="submit" value="View Questions"></form>
+        <form action='/faq' method='GET'><input disabled class="bannerButton" type="submit"  value="View FAQ"></form>
+    </div>
+	<!--
+	<form class="SearchFAQForm">
+		Search The FAQ : <input class="single_line_text_field" type="text" name="faqSearch">
+		<input class="button" type="submit" value="Search">
+	</form>
+	-->
+	<table class="questionAnswerArea">
+		<tr class="question">
+			{%if instructor%}
+				<th>Username</th>
+			{%endif%}
+			<th>Question</th><th>Response</th></tr>
+		
+		{%for q in questions%}
+			<tr class="question">
+				{%if instructor%}
+					<td>{{q.senderUID.get().username}}</td>
+				{%endif%}
+				<td>{{q.message}}</td><td>{{q.response}}</td>
+				
+					
+						<td><form action='/respond' method = 'get'>
+							<input type = 'hidden' name = 'questionkey' value='{{q.key.urlsafe()}}'/>
+							<input type ='submit' name = 'Respond' value = 'Respond'/>
+						</form></td>
+			
+			
+			</tr>
+		{%endfor%}
+	</table>
+
+</body>
+</html>
