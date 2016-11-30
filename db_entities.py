@@ -82,7 +82,6 @@ class Question(ndb.Model):
 	def submit_question(self, strict=False):
 		#return 1 on success / 0 on failure
 		#strict will impose strict grammar/profanity filter maybe?
-		
 		#ensure the UIDs are actually keys, this may be redundant with ndb
 		if isinstance(self.senderUID, ndb.Key) and isinstance(self.classUID, ndb.Key):
 			sender = self.senderUID.get()
@@ -99,7 +98,8 @@ class Question(ndb.Model):
 			self.response = response
 			self.put()
 			return 1
-		return 0
+		else:
+			return 0
 def FAQ_dict(self):
 		#unfinished
 		# will organize FAQ entries into dictionary indexed by category

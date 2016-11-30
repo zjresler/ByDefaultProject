@@ -61,26 +61,33 @@ class QuestionHandler(BaseHandler):
 		accounttype = self.session.get('accounttype')
 		classname = self.session.get('class')
 		self.session['message'] = self.request.get('message')
-		self.submit_question_wrapper(accountname, accounttype, classname)
+		ret = self.submit_question_wrapper(accountname, accounttype, classname, self.request.get('message'))
+		if ret == 1:
+			self.session.pop('class')
+			self.session.pop('message')
+			super(QuestionHandler, self).success_redirect('QSUBMIT_SUCCESS', '/studenthomepage')
+		elif ret == -1:
+			super(QuestionHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
+		elif ret == -2:
+			super(QuestionHandler, self).error_redirect('QSUBMIT_FAIL', '/ask')
+		elif ret == -3:
+			super(QuestionHandler, self).error_redirect('CLASS_NOT_FOUND', '/studenthomepage')
 			
-	def submit_question_wrapper(self, accountname, accounttype, classname):
+	def submit_question_wrapper(self, accountname, accounttype, classname, message):
 		if self.validate_user(accountname, accounttype=STUDENT):
 			user = User.query(User.username == accountname).fetch()[0]
 			#user has correct type
 			classes = Class.query(Class.classname==classname).fetch()
 			if len(classes) !=1:
 				#class was not found or more than one class was found
-				super(QuestionHandler, self).error_redirect('CLASS_NOT_FOUND', '/studenthomepage')
-			
-			question = Question(senderUID = user.key, classUID = classes[0].key, message = self.session.get('message'))
+				return -3
+			question = Question(senderUID = user.key, classUID = classes[0].key, message = message)
 			if question.submit_question() != 0:
-				self.session.pop('class')
-				self.session.pop('message')
-				super(QuestionHandler, self).success_redirect('QSUBMIT_SUCCESS', '/studenthomepage')
-			else:
-				super(QuestionHandler, self).error_redirect('QSUBMIT_FAIL', '/ask')
+				return 1
+			else:	
+				return -2
 		else:
-			super(QuestionHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
+			return -1
 
 class ResponseHandler(BaseHandler):
 
@@ -105,12 +112,12 @@ class ResponseHandler(BaseHandler):
 			#TODO: add a loop to check that the class is in the user's classlist
 			if len(classy) == 1:
 				classy = classy[0]
-				question = None
-				try:
-					question = Key(urlsafe=questionkey).get()
-				except TypeError:
+				#question = None
+				#try:
+				question = Key(urlsafe=questionkey).get()
+				#except TypeError:
 					#corrupt or non existent questionkey
-					super(ResponseHandler, self).error_redirect('QKEY_CORRUPT', '/instructorhomepage')
+					#super(ResponseHandler, self).error_redirect('QKEY_CORRUPT', '/instructorhomepage')
 				#question retrieved successfully
 				self.session['question_key'] = questionkey
 				data = {
@@ -136,11 +143,10 @@ class ResponseHandler(BaseHandler):
 		classname = self.session.get('class')
 		categoryname = self.request.get('cname')
 		new_cname = self.request.get('new_cname')
-		
 		if self.validate_user(accountname, accounttype = ADMIN):
 			#user is logged in as accountname qand accounttype is ADMIN
 			user = User.query(User.username == accountname).fetch()[0]
-			
+			classes = Class.query(Class.classname == classname).fetch()
 			if len(classes) == 1:
 				classy = classes[0]
 				
@@ -159,8 +165,7 @@ class ResponseHandler(BaseHandler):
 						category = None
 					if category != None:
 						question.category = category.key
-				
-				if question.respond_question(user.key, response) != 0:
+				if question.respond_question(user.key, response)==1:
 					self.session.pop('class')
 					self.session.pop('question')
 					super(ResponseHandler, self).success_redirect('RSUBMIT_SUCCESS', '/instructorhomepage')
@@ -168,7 +173,6 @@ class ResponseHandler(BaseHandler):
 					super(ResponseHandler, self).error_redirect('RSUBMIT_FAIL', '/instructorhomepage')
 			else:
 				super(ResponseHandler, self).error_redirect('CLASS_NOT_FOUND', '/instructorhomepage')
-
 		else:		
 			super(ResponseHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
 			

@@ -90,6 +90,10 @@ class QuestionTests(unittest.TestCase):
 		self.q02_key = self.q02.put()
 		time.sleep(2)
 		
+		#create response handler object
+		self.respond = ResponseHandler()
+		self.ask = QuestionHandler()
+	
 	def tearDown(self):
 		self.student_key.delete()
 		self.instructor_key.delete()
@@ -117,17 +121,18 @@ class QuestionTests(unittest.TestCase):
 		del self.q02
 		del self.q02_key
 		
+		del self.respond
+		del self.ask
 		
 	def test_instructor_can_respond(self):
-		
-		qkey = self.q00_key
 		respond = ResponseHandler()
 		session = {
 			'account': self.instructor.username,
-			'accounttypr': ADMIN,
+			'accounttype': ADMIN,
 			'class': self.classy.classname,
-			'question_key': qkey.urlsafe(),
+			'question_key': self.q00_key.urlsafe(),
 		}
+		
 		secure_cookie_serializer = SecureCookieSerializer(SECRET_KEY)
 		serialized = secure_cookie_serializer.serialize('session', session)
 		headers = {'Cookie':'session=%s' % serialized}
@@ -141,15 +146,15 @@ class QuestionTests(unittest.TestCase):
 		self.assertTrue(respond.request.get('response') == 'test')
 		
 		response = respond.request.get_response(main.app)
+		time.sleep(2)
 		#message = response.get('message')
-		question = qkey.get()
+		question = self.q00
 		self.assertFalse(question == None)
 		self.assertFalse(question.respondentUID == None)
 		self.assertFalse(question.response == None)
 		self.assertFalse(question.response == '')
 		self.assertTrue(question.respondentUID == self.instructor.key)
 		self.assertTrue(question.response == 'test')
-		#del respond
 		
 	def test_instructor_can_create_new_category(self):
 		
@@ -157,7 +162,7 @@ class QuestionTests(unittest.TestCase):
 		respond = ResponseHandler()
 		session = {
 			'account': self.instructor.username,
-			'accounttypr': ADMIN,
+			'accounttype': ADMIN,
 			'class': self.classy.classname,
 			'question_key': qkey.urlsafe(),
 		}
@@ -183,18 +188,13 @@ class QuestionTests(unittest.TestCase):
 		category = category[0]
 		self.assertTrue(category.key.parent() == self.classy.key)
 		category.key.delete()
-		
-		#del respond
-		
+	
 	def test_instructor_can_set_category_to_answer(self):
-		
-		
 		qkey = self.q00_key
-		
 		respond = ResponseHandler()
 		session = {
 			'account': self.instructor.username,
-			'accounttypr': ADMIN,
+			'accounttype': ADMIN,
 			'class': self.classy.classname,
 			'question_key': qkey.urlsafe(),
 		}
@@ -219,8 +219,7 @@ class QuestionTests(unittest.TestCase):
 		self.assertTrue(question.category == cate.key)
 		question.key.delete()
 		cate.key.delete()
-		#del respond
-		
+	
 	def test_instructor_can_respond_with_faq(self):
 		
 		
@@ -229,7 +228,7 @@ class QuestionTests(unittest.TestCase):
 		respond = ResponseHandler()
 		session = {
 			'account': self.instructor.username,
-			'accounttypr': ADMIN,
+			'accounttype': ADMIN,
 			'class': self.classy.classname,
 			'question_key': qkey.urlsafe(),
 		}
@@ -242,15 +241,13 @@ class QuestionTests(unittest.TestCase):
 		
 		self.assertTrue(respond.request.get('response') == 'test')
 		self.assertTrue(respond.request.get('infaq') == 'infaq')
-		
 		response = respond.request.get_response(main.app)
 		
 		time.sleep(2)
 		
 		question = qkey.get()
 		self.assertTrue(question.response == R_INFAQ)
-		
-		
+	
 	def test_questions_in_FAQ_have_category(self):
 		
 		#create a category and put it to the DB
@@ -276,7 +273,7 @@ class QuestionTests(unittest.TestCase):
 		self.assertTrue(faq[0].key == self.q00_key)
 		
 		cate.key.delete()
-		
+	
 	def test_questions_not_in_FAQ_have_no_category(self):
 		
 		#create a category and put it to the DB
@@ -307,7 +304,7 @@ class QuestionTests(unittest.TestCase):
 			self.assertTrue(q in all_questions)
 		
 		cate.key.delete()
-		
+	
 	def test_unanswered_questions_have_no_category(self):
 		
 		questions = [None]*100
@@ -318,75 +315,58 @@ class QuestionTests(unittest.TestCase):
 		for q in questions:
 			self.assertTrue(q.get().category==None)
 			q.delete()
-		
-		
-	def test_question_submit_student(self):
-		
-		
-		key00 = self.q00_key
-		key01 = self.q01_key
-		key02 = self.q02_key
-		
-		self.assertTrue(key00 != None)
-		self.assertTrue(key01 != None)
-		self.assertTrue(key02 != None)
-		self.assertTrue(key02 != key00)
-		self.assertTrue(key00 == self.q00.key)
-		self.assertTrue(key01 == self.q01.key)
-		self.assertTrue(key02 == self.q02.key)
-		
-		q00 = key00.get()
-		q01 = key01.get()
-		q02 = key02.get()
-		
-		self.assertTrue(q00.message == self.q00.message)
-		self.assertTrue(q00.senderUID == self.q00.senderUID)
-		self.assertTrue(q00.classUID == self.q00.classUID)
-		self.assertTrue(q00.response == None)
-		
-		self.assertTrue(q01.message == self.q01.message)
-		self.assertTrue(q01.senderUID == self.q01.senderUID)
-		self.assertTrue(q01.classUID == self.q01.classUID)
-		self.assertTrue(q01.response == None)
-		
-		self.assertTrue(q02.message == self.q02.message)
-		self.assertTrue(q02.senderUID == self.q02.senderUID)
-		self.assertTrue(q02.classUID == self.q02.classUID)
-		self.assertTrue(q02.response == None)
-		
-		
+	
+	def test_question_submit_wrapper(self):
+		self.ask.submit_question_wrapper(self.student.username, self.student.accounttype, self.classy.classname, 'foo is a question?')
+		time.sleep(2)
+		question = Question.query(Question.message=='foo is a question?').fetch()
+		self.assertTrue(len(question)==1)
+		question = question[0]
+		self.assertTrue(question.senderUID == self.student_key)
+		self.assertTrue(question.message == 'foo is a question?')
+		self.assertTrue(question.respondentUID == None)
+		self.assertTrue(question.classUID == self.class_key)
+		question.key.delete()
 	"""
-	def test_validate_user(self):
+	def _test_question_submit_student(self):
 		self.assertTrue(False)
-	"""
-	def destroy_self(self):
-		self.q00_key.delete()
-		self.q01_key.delete()
-		self.q02_key.delete()
+	
 	def test_student_can_enter_a_code_to_join_class(self):
 		self.assertTrue(False)
+	
 	def test_incorrect_code_gives_error(self):
 		self.assertTrue(False)
+	
 	def test_students_can_edit_account_info(self):
 		self.assertTrue(False)
+	
 	def test_instructor_can_create_student_accounts(self):
 		self.assertTrue(False)
+	
 	def test_instructor_can_edit_FAW(self):
 		self.assertTrue(False)
+	
 	def test_student_can_view_FAQ(self):
 		self.assertTrue(False)
+	
 	def test_else_can_view_FAQ(self):
 		self.assertTrue(False)
+	
 	def test_student_can_view_their_prev_questiosn(self):
 		self.assertTrue(False)
+	
 	def test_instructor_can_view_their_prev_questions(self):
 		self.assertTrue(False)
+	
 	def test_admin_can_create_instructor(self):
 		self.assertTrue(False)
+	
 	def test_admin_can_create_student(self):
 		self.assertTrue(False)
+	
 	def test_instructor_can_batch_create_student_accounts(self):
 		self.assertTrue(False)
+	
 	def test_datastore_key(self):
 		cate = Category(name='test')
 		self.assertTrue(cate.key == None)
@@ -394,7 +374,12 @@ class QuestionTests(unittest.TestCase):
 		self.assertTrue(cate.key == cate_key)
 		self.assertTrue(cate.key != None)
 		cate_key.delete()
-	
+	"""
+	def test_datastore_key_2(self):
+		thing = self.admin_key.urlsafe()
+		radmin = Key(urlsafe=thing).get()
+		self.assertFalse(radmin.key==None)
+		self.assertTrue(radmin.key == self.admin.key)
 class FakeFile():
 	data = ''
 	def write(self, str):
