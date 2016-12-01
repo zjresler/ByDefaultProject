@@ -155,7 +155,7 @@ class QuestionTests(unittest.TestCase):
 		self.assertFalse(question.response == '')
 		self.assertTrue(question.respondentUID == self.instructor.key)
 		self.assertTrue(question.response == 'test')
-		
+
 	def test_instructor_can_create_new_category(self):
 		
 		qkey = self.q00_key
@@ -177,7 +177,10 @@ class QuestionTests(unittest.TestCase):
 		self.assertTrue(respond.request.get('response') == 'test')
 		self.assertTrue(respond.request.get('cname') == 'test_category')
 		
-		self.assertTrue(len(Category.query(Category.name=='test_category').fetch())==0) #category doesnt exist yet
+		temp = Category.query(Category.name=='test_category').fetch()
+		for c in temp:
+			c.key.delete()
+		del temp
 		
 		response = respond.request.get_response(main.app)
 		
@@ -208,6 +211,11 @@ class QuestionTests(unittest.TestCase):
 		#ensure that the vars were passed to test properly
 		self.assertTrue(respond.request.get('response') == 'test')
 		self.assertTrue(respond.request.get('cname') == 'test_category')
+		
+		temp = Category.query(Category.name == 'test_category').fetch()
+		for c in temp:
+			c.key.delete()
+		del temp
 		
 		response = respond.request.get_response(main.app)
 		
@@ -249,18 +257,24 @@ class QuestionTests(unittest.TestCase):
 		self.assertTrue(question.response == R_INFAQ)
 	
 	def test_questions_in_FAQ_have_category(self):
+		temp = self.classy.FAQ
+		for q in temp:
+			q.key.delete()
+		del temp
 		
 		#create a category and put it to the DB
 		cate = Category(name="test category 00", parent=self.classy.key)
-		cate.put()
 		
-		time.sleep(2)
+		
+		#time.sleep(2)
 		
 		#update the category of q00
-		self.q00.category = cate.key
+		self.q00.category = cate.put()
 		self.q00.put()
 		
 		time.sleep(2)
+		
+		
 		
 		#get all of the questions in the FAQ of classy
 		#	ie. all of the questions with a classUID of classy's key
@@ -275,15 +289,18 @@ class QuestionTests(unittest.TestCase):
 		cate.key.delete()
 	
 	def test_questions_not_in_FAQ_have_no_category(self):
+		temp = self.classy.FAQ
+		for q in temp:
+			q.key.delete()
+		del temp
 		
 		#create a category and put it to the DB
 		cate = Category(name="test category 01", parent=self.classy.key)
-		cate.put()
 		
-		time.sleep(2)
+		#time.sleep(2)
 		
 		#update the category of q00
-		self.q00.category = cate.key
+		self.q00.category = cate.put()
 		self.q00.put()
 		
 		time.sleep(2)
@@ -327,7 +344,7 @@ class QuestionTests(unittest.TestCase):
 		self.assertTrue(question.respondentUID == None)
 		self.assertTrue(question.classUID == self.class_key)
 		question.key.delete()
-	"""
+	
 	def _test_question_submit_student(self):
 		self.assertTrue(False)
 	
@@ -374,7 +391,6 @@ class QuestionTests(unittest.TestCase):
 		self.assertTrue(cate.key == cate_key)
 		self.assertTrue(cate.key != None)
 		cate_key.delete()
-	"""
 	def test_datastore_key_2(self):
 		thing = self.admin_key.urlsafe()
 		radmin = Key(urlsafe=thing).get()

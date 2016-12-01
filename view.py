@@ -27,6 +27,8 @@ from basehandler import BaseHandler
 from google.appengine.ext import ndb
 from webapp2_extras import sessions
 
+from strings import *
+
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__))
 )
@@ -48,29 +50,36 @@ class PastQAHandler(BaseHandler):
 		accountname = self.session.get('account')
 		accounttype = self.session.get('accounttype')
 		class_get = self.session.get('class')
-	
+		
 	   
-		if username != '':
-			user = User.query(User.username == username).fetch()[0]
+		if self.validate_user(accountname):
+			user = User.query(User.username==accountname).fetch()[0]
+			if accounttype == '':
+				self.session['accounttype'] = user.accounttype
+				accounttype = user.accounttype
 			user_key = user.key
 			classes = Class.query(Class.classname == class_get).fetch()
 			#classname = user.classlist
-			que = Question.query(Question.senderUID == user_key and Question.classUID == classes[0].key).fetch()		
-			if user.accounttype == 'student':
+			if accounttype == STUDENT:
+				que = Question.query(Question.senderUID == user_key, Question.classUID == classes[0].key).fetch()		
 				template_values = {'title': 'Past Questions & Answers','accounttype': accounttype,'accountname' : accountname}
 				template_values['questions'] = que
 				template = JINJA_ENVIRONMENT.get_template('./html/PastQA.html')
+				self.response.write(template.render(template_values))
+			elif accounttype == ADMIN:
+				que = Question.query(Question.respondentUID == user_key, Question.classUID == classes[0].key).fetch()		
+				template_values = {'title': 'Past Questions & Answers','accounttype': accounttype,'accountname' : accountname}
+				template_values['questions'] = que
+				template = JINJA_ENVIRONMENT.get_template('./html/PastQA.html')
+				self.response.write(template.render(template_values))
 			else:
-				self.response.write('You are not logged in.')
-				#time.sleep(2)
-				self.redirect('/')
+				self.response.write(accounttype+'<br/>')
+				super(PastQAHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
 				
-			template = JINJA_ENVIRONMENT.get_template('./html/PastQA.html')
-			self.response.write(template.render(template_values))
+			
 		else:
-			self.response.write('You are not logged in.')
-			#time.sleep(2)
-			self.redirect('/')
+			super(PastQAHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
+			exit(1)
 		#self.response.write(template.render(template_values))
 class ReviewHandler(BaseHandler):
    def post(self):
@@ -93,20 +102,20 @@ class ReviewHandler(BaseHandler):
 			user_key = user.key
 			
 			if user.accounttype == 'student':
-				template_values['questions'] = Question.query(Question.senderUID == user_key and Question.classUID == classy.key).fetch()
+				template_values['questions'] = Question.query(Question.senderUID == user_key, Question.classUID == classy.key).fetch()
 				template_values['admin'] = False
 				template_values['student'] = True
 			elif user.accounttype == 'instructor':
-				template_values['questions'] = Question.query(Question.respondentUID == None and Question.classUID == classy.key).fetch()
+				template_values['questions'] = classy.open_questions
 				template_values['instructor'] = True
 				template_values['student'] = False
 			else:
-				self.error_redirect('INVALID_LOGIN_STATE', '/')
+				super(ReviewHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
 				
 			template = JINJA_ENVIRONMENT.get_template('./html/review.html')
 			self.response.write(template.render(template_values))
 		else:
-			self.error_redirect('INVALID_LOGIN_STATE', '/')
+			super(ReviewHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
 
 class FAQ(BaseHandler):
 	def post(self):

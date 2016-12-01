@@ -22,7 +22,7 @@ class FAQHandler(BaseHandler):
 		template = JINJA_ENVIRONMENT.get_template('./html/view.html')
 		classes = Class.query().fetch()
 		username = ''
-		accountype = ''
+		accounttype = ''
 		if 'account' in self.session and self.session['account']!='':
 			username = self.session.get('account')
 			user = User.query(User.username == username).fetch()
@@ -47,7 +47,7 @@ class FAQHandler(BaseHandler):
 		classname = class_get[0]
 		
 		username = ''
-		accountype = ''
+		accounttype = ''
 		if 'account' in self.session and self.session['account']!='':
 			username = self.session.get('account')
 			user = User.query(User.username == username).fetch()
@@ -56,8 +56,9 @@ class FAQHandler(BaseHandler):
 				
 		class_get = Class.query(Class.classname
 								== class_get[0]).fetch()[0]
-		theclass = Question.query(Question.classUID
-								  == class_get.key).fetch()
+		theclass = class_get.FAQ
+#		theclass = Question.query(Question.classUID
+#								  == class_get.key).fetch()
 		homepath = ''
 		if accounttype == 'instructor':
 			homepath = 'action="/instructorhomepage" style="visibility:visible;"'

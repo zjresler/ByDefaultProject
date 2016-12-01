@@ -34,6 +34,10 @@ class Class(ndb.Model):
 	@property
 	def categories(self):
 		return Category.query(ancestor=self.key).fetch()
+		
+	@property
+	def open_questions(self):
+		return Question.query(Question.classUID==self.key, Question.response == None, Question.respondentUID == None).fetch()
 class User(ndb.Model):
 	username 	= ndb.StringProperty(required=True)
 	password	= ndb.StringProperty(required=True)

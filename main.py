@@ -55,6 +55,13 @@ class DumpDBHandler(BaseHandler):
 		
 class TestOutputHandler(BaseHandler):
 	def get(self):
+		classes_to_dump = Class.query(Class.classname == 'TESTCLASS_test').fetch()
+		for c in classes_to_dump:
+			if c.key != None:
+				self.response.write('Dumping Class: '+c.classname+'<br>')
+				c.key.delete()
+		time.sleep(2)
+		self.response.write('Starting tests, this may take a few minutes...')
 		test_question_system.runner.stream.data = ''
 		test_question_system.runner.run(test_question_system.suite)
 		self.response.write(test_question_system.runner.stream.data)
