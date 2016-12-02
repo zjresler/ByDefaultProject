@@ -2,6 +2,7 @@ import webapp2
 import os
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import Key
+from strings import *
 class Category(ndb.Model):
 	name = ndb.StringProperty(required=True)
 	def unique_put(self, classUID):
@@ -63,17 +64,26 @@ class User(ndb.Model):
 		return 0
 	def reset_classlist(self):
 		self.classlist = []
-
+		
 	@property
 	def questions(self):
 		if self.accounttype == ADMIN:
 			return Question.query(Question.respondentUID == self.key).fetch()
 		elif self.accounttype == STUDENT:
-			return Question.query(Question.senderUID == self.key).fetch()
-		return None
+			return Question.query(ancestor=self.key).fetch()
+		return []
+	
+	def questions_of_class(self, classUID):
+		if self.accounttype == ADMIN:
+			return Question.query(Question.respondentUID == self.key, Question.classUID == classUID).fetch()
+		elif self.accounttype == STUDENT:
+			return Question.query(Question.classUID == classUID, ancestor=self.key).fetch()
+		return []
+		
 class Question(ndb.Model):
 	respondentUID		= ndb.KeyProperty(User)
-	senderUID			= ndb.KeyProperty(User, required = True)
+#	senderUID			= ndb.KeyProperty(User, required = True)
+#	Use parent = senderUID for this field
 	classUID			= ndb.KeyProperty(Class, required = True)
 	message 			= ndb.StringProperty(required=True)
 	response 			= ndb.StringProperty()
@@ -84,14 +94,13 @@ class Question(ndb.Model):
 		return self.put()
 		
 	def submit_question(self, strict=False):
-		#return 1 on success / 0 on failure
-		#strict will impose strict grammar/profanity filter maybe?
+		#return key on success / 0 on failure
 		#ensure the UIDs are actually keys, this may be redundant with ndb
-		if isinstance(self.senderUID, ndb.Key) and isinstance(self.classUID, ndb.Key):
-			sender = self.senderUID.get()
+		if self.classUID != None:
+			sender = self.key.parent().get()
 			class_ = self.classUID.get()
-			#ensure the sender is a student and the message is not an empty string
-			if sender.accounttype == 'student' and self.message != '':
+			#ensure the sender is a student
+			if sender.accounttype == 'student':
 				#calls put, 'submit' the question
 				return self.put()
 		return 0

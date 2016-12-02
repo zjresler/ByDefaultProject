@@ -71,17 +71,17 @@ class QuestionTests(unittest.TestCase):
 		
 		#create the questions
 		self.q00 = Question(
-			senderUID = self.student_key,
+			parent = self.student_key,
 			classUID = self.class_key,
 			message = 'What is the air speed velocity of a swallow?'
 		)
 		self.q01 = Question(
-			senderUID = self.student_key, 
+			parent = self.student_key, 
 			classUID = self.class_key, 
 			message = 'What is your favorite color?'
 		)
 		self.q02 = Question(
-			senderUID = self.student_key, 
+			parent = self.student_key, 
 			classUID = self.class_key, 
 			message = 'What is your quest?'
 		)
@@ -326,7 +326,7 @@ class QuestionTests(unittest.TestCase):
 		
 		questions = [None]*100
 		for i in range(100):
-			questions[i] = Question(senderUID = self.student.key, classUID = self.classy.key, message = 'This is an unanswered question?').put()
+			questions[i] = Question(parent=self.student.key, classUID = self.classy.key, message = 'This is an unanswered question?').put()
 			
 		time.sleep(2)
 		for q in questions:
@@ -339,7 +339,7 @@ class QuestionTests(unittest.TestCase):
 		question = Question.query(Question.message=='foo is a question?').fetch()
 		self.assertTrue(len(question)==1)
 		question = question[0]
-		self.assertTrue(question.senderUID == self.student_key)
+		self.assertTrue(question.key.parent() == self.student_key)
 		self.assertTrue(question.message == 'foo is a question?')
 		self.assertTrue(question.respondentUID == None)
 		self.assertTrue(question.classUID == self.class_key)

@@ -18,17 +18,10 @@
 	
 
 	<table class="questionAnswerArea">
+		<tr></th><th>Question</th><th>Respondent</th><th>Response</th></tr>
 		{%for q in questions %}
 		<tr class="question">
-				
-			<th>Question: </th>
-				
-				<td>{{ q.message }}</td>
-				
-			<th>Resposne: </th>
-				
-				<td>{{ q.response }}</td>
-				
+			<td>{{ q.message }}</td>{%if q.response!=None%}<td>{%if q.respondentUID!=None%}{{q.respondentUID.get().username}}{%endif%}</td><td>{{ q.response }}</td>{%endif%}	
 		</tr>
 		{%endfor%}
 		

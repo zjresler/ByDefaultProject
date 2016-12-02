@@ -47,7 +47,7 @@ CLASSES USED:
 		{%for q in questions%}
 			<tr class="question">
 				{%if instructor%}
-					<td>{{q.senderUID.get().username}}</td>
+					<td>{{q.key.parent().get().username}}</td>
 				{%endif%}
 				<td>{{q.message}}</td><td>{{q.response}}</td>
 				

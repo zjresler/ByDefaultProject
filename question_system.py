@@ -83,7 +83,7 @@ class QuestionHandler(BaseHandler):
 			if len(classes) !=1:
 				#class was not found or more than one class was found
 				return -3
-			question = Question(senderUID = user.key, classUID = classes[0].key, message = message)
+			question = Question(parent=user.key, classUID = classes[0].key, message = message)
 			if question.submit_question() != 0:
 				return 1
 			else:	
@@ -103,10 +103,7 @@ class ResponseHandler(BaseHandler):
 		accounttype = self.session.get('accounttype')
 		classname = self.session.get('class')
 		questionkey = self.request.get('questionkey')
-		#self.response.write(accountname+'<br>'+accounttype+'<br>'+classname+'<br>'+questionkey+'<br>'+Key(urlsafe=questionkey).get().senderUID.urlsafe())
-		#tq = Key(urlsafe=questionkey).get()
-		#questions = Question.query(Question.key tq.key and Question.senderUID == tq.senderUID and Question.classUID	== tq.classUID).fetch()
-		#self.response.write('<br>'+tq.message+'<br>'+str(len(questions)))
+		
 		if self.validate_user(accountname, accounttype = ADMIN):
 			#user has correct type
 			classy = Class.query(Class.classname==classname).fetch()
@@ -169,7 +166,7 @@ class ResponseHandler(BaseHandler):
 						question.category = category.key
 				if question.respond_question(user.key, response)==1:
 					self.session.pop('class')
-					self.session.pop('question')
+					self.session.pop('question_key')
 					super(ResponseHandler, self).success_redirect('RSUBMIT_SUCCESS', '/instructorhomepage')
 				else:
 					super(ResponseHandler, self).error_redirect('RSUBMIT_FAIL', '/instructorhomepage')

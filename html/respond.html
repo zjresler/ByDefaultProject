@@ -42,7 +42,7 @@ CLASSES USED:
 			<form action='/faq' method='GET'><input disabled class="bannerButton" type="submit"  value="View FAQ"/></form>
 		</div>
 
-		<h2 id="Resp">Respond to {{question.senderUID.get().username}}'s question</h2>
+		<h2 id="Resp">Respond to {{question.key.parent().get().username}}'s question</h2>
 		
 		<!-- show question to be answered -->
 		<div class="displayText" id="display_user_question">
