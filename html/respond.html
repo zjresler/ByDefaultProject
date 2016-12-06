@@ -33,7 +33,14 @@ CLASSES USED:
 	
 	<body>
 
-		{{banner}}
+		<h1 id="SysName">By Default</h1>
+		<!-- banner -->
+		<div class="bannerArea">
+			Welcome {{accountname}}
+			<form action='/logout' method='GET'><input class="bannerButton" type="submit" value="Logout"/></form>
+			<form action='/review' method='post'><input disabled class="bannerButton" type="submit" value="View Questions"/></form>
+			<form action='/faq' method='GET'><input disabled class="bannerButton" type="submit"  value="View FAQ"/></form>
+		</div>
 
 		<h2 id="Resp">Respond to {{question.key.parent().get().username}}'s question</h2>
 		
@@ -50,7 +57,6 @@ CLASSES USED:
 		<div class="QAMessageArea" id="manualResponse">
 			<br>
 			<table>
-			<form class="QAForm" id="manual_response" action="/respond" method="post">
 				<tr><th>Catagory</th><th> - or - </th><th>New Category</th></tr>
 				<tr>
 					<td>
@@ -74,12 +80,12 @@ CLASSES USED:
 				</tr>
 				<tr><th>Response</th></tr>
 				<tr>
-					
+					<form class="QAForm" id="manual_response" action="/respond" method="post">
 						<textarea style="resize:none" name="response" form="manual_response" rows="4" cols="50"></textarea><br>
 						<input type="submit" value="Submit Response"/>
-					
+					</form>
 				</tr>
-			</form>
+				
 			</table>
 			
 		</div>

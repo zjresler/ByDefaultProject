@@ -1,0 +1,31 @@
+﻿Revert "Merge remote-tracking branch 'refs/remotes/origin/uniform-banner' into jsoni-branch-1"
+
+This reverts commit 2685ef8a86d7ed99a570cf979f781ce56514b2ef, reversing
+changes made to 8445271ce83ccca7441c3fac2592aa05cc57c2fa.
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch jsoni-branch-1
+# Your branch and 'origin/jsoni-branch-1' have diverged,
+# and have 4 and 2 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# Changes to be committed:
+#	modified:   app.yaml
+#	modified:   basehandler.py
+#	modified:   css/BeAll.css
+#	modified:   html/ask.html
+#	modified:   html/reg_templates/AddNewInstructor.html
+#	modified:   html/reg_templates/AddNewStudents.html
+#	modified:   html/reg_templates/DisplayNewStudents.html
+#	modified:   html/reg_templates/EditPersonalInformation.html
+#	deleted:    html/reg_templates/EditReviewStudents.html
+#	modified:   html/reg_templates/EditStudent.html
+#	modified:   html/reg_templates/MainPage_AccountAdministration.html
+#	modified:   html/respond.html
+#	modified:   question_system.py
+#	modified:   registration.py
+#	modified:   strings.py
+#	deleted:    texture/banner.png
+#
+

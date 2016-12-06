@@ -11,8 +11,7 @@ handlers:
 
 - url: /css
   static_dir: css
-- url: /texture
-  static_dir: texture
+  
 - url: .*
   script: main.app
 

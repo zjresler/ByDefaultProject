@@ -21,9 +21,16 @@ class RegistrationMainHandler(BaseHandler):
 		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/MainPage_AccountAdministration.html')
 		accountname = self.session.get('account')
 		user = User.query(User.username == accountname).fetch()[0]
-		
+		accounttype = user.accounttype
+		_class = user.classlist
+		password = user.password
+		email = user.email
 		template_values = {
-			'user': user
+			'accounttype': accounttype,
+			'account': accountname,
+			'class': _class,
+			'password': password,
+			'email': email
 			}
 		self.response.write(template.render(template_values))
 
@@ -51,7 +58,7 @@ class AddInstructorHandler(BaseHandler):
 		elif userName == '' or firstNameFromForm == '' or lastNameFromForm == '':
 			if userName == '': 
 				outcome = "blankEmailAddress"
-			if firstNameFromForm == '': 
+			elif firstNameFromForm == '': 
 				outcome = "blankFirstName"
 			else:
 				outcome = "blankLastName"
@@ -87,40 +94,27 @@ class AddStudentHandler(BaseHandler):
 		
 		self.response.write(template.render(template_values))
 	def post(self):
-		classFromForm = Class(classname=self.request.get('class'))
+		currentClass = self.request.get('class')
 		textFromForm = self.request.get('textArea').strip() + '*'
+		addressList = []
 
 		accountname = self.session.get('account')
 		user = User.query(User.username == accountname).fetch()[0]
 		accounttype = user.accounttype
 
 		instructorAssigned = ""
-		# IF USER IS AN ADMIN, GET THE INSTRUCTOR FOR THE NEW CLASS
-		if(accounttype == 'admin'): 
-			self.request.get('instructorAssigned')
-		else:
-			# IF USER IS AN INSTRUCTOR, ADD THE INSTRUCTOR TO THE CLASS IF NOT ALREADY ASSIGNED
-			userClassList = user.classlist
-			self.response.write("classFromForm:")
-			self.response.write(classFromForm)
-			self.response.write("userClassList:")
-			self.response.write(userClassList)
-			if not(classFromForm in userClassList): #not (classnameFromForm in user.classlist):
-				user.classlist.append(classFromForm)
-				user.put()
-
+		if(accounttype == 'admin'): self.request.get('instructorAssigned')
 
 		#template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/AddNewStudents.html')
 		#self.response.out.write(" class = " + currentClass + ", addresses = " + text)
 		#self.response.write(template.render())
 		
-		# Parse each email address from between commas
-		addressList = []
+		# Parse each email address
 		newAddress =''
 		BlankAddy = False
-		for character in textFromForm:
-			if character != ',' and character !='*':
-				newAddress += character
+		for ch in textFromForm:
+			if ch != ',' and ch !='*':
+				newAddress += ch
 			elif len(newAddress) > 0:
 					addressList.append(newAddress)
 					newAddress=''
@@ -128,53 +122,28 @@ class AddStudentHandler(BaseHandler):
 				BlankAddy = True
 		if len(addressList) == 0: 
 			BlankAddy = True
-		
-		if not BlankAddy and len(classFromForm.classname) != 0:
-			# Add the addresses to the datastore if not already existing there.
-			# Otherwise, see if the account is already a member in the class.
-			# If not a member, add to the classlist.
-
+		if not BlankAddy and len(currentClass) != 0:
+			# Add the addresses to the datastore
 			passwordLog = []
-			for studentToAdd in addressList:
-				# IF 'student[0]' DOES NOT EXIST, THEN ADD AS NEW USER
-				students = User.query(User.username == studentToAdd).fetch()
-				Unique = True
-				for student in students:
-					if student.username == studentToAdd:
-						Unique = False
-				if Unique:
-					passWord = str(random.randrange(100000,1000000))
-					passwordLog.append([studentToAdd, passWord])
-					newStudent = User(
-						username=studentToAdd,
-						password=passWord,
-						lastname='temp',
-						firstname='temp',
-						email=studentToAdd,
-						accounttype='student'
-						)
-					newStudent.classlist.append(classFromForm)
-					newStudent.put()
-				# SINCE STUDENT ALREADY EXISTS, IS THE STUDENT ALREADY A MEMBER OF THE CLASS?
-				else:
-					textmsg = ''
-					student = User.query(User.username == studentToAdd).fetch()[0]
-					self.response.write('student: ' + student.username)
-					classList = student.classlist
-					self.response.write(classList)
-					self.response.write('\n')
-					self.response.write(classFromForm in classList)
-					if (classFromForm in classList):
-						textmsg = ', already in class'
-					else:
-						student.classlist.append(classFromForm)
-						student.put()
-						textmsg = ', added to ' + classFromForm.classname
-							
-					passwordLog.append([studentToAdd, 'existing user' + textmsg])
+			for address in addressList:
+				passWord = str(random.randrange(100000,1000000))
+				passwordLog.append([address, passWord])
+				newUser = User(
+					username=address,
+					password=passWord,
+					lastname='temp',
+					firstname='temp',
+					email=address,
+					accounttype='student'
+					)
+				instructor = ''
+				if accounttype == 'admin': instructor = self.request.get("instructorAssigned")
+				else: instructor = user
 
+				newUser.classlist.append(Class(classname=currentClass, instructor=instructor))
+				newUser.put()
 		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/DisplayNewStudents.html')
-		template_values = { "log": passwordLog, "class": classFromForm.classname }
+		template_values = { "log": passwordLog, "class": currentClass }
 		self.response.write(template.render(template_values))
 
 class EditPersonalDataHandler(BaseHandler):
@@ -215,90 +184,162 @@ class EditPersonalDataHandler(BaseHandler):
 		# Should also notify the instructor as to the student's changes.
 		self.redirect('/registrationhomepage')
 
-class EditReviewStudentsHandler(BaseHandler):
+'''
+class EditStudentHandler(BaseHandler):
 	def get(self):
-		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/EditReviewStudents.html')
+		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/EditPersonalInformation.html')
 		accountname = self.session.get('account')
-		user = User.query(User.username == accountname).fetch()[0]
-
-		if (user.accounttype == 'admin'):
-			classes = Class.query(Class.classname != '')
+		accounttype = user.accounttype
+		classes = ''
+		if accounttype == 'instructor':
+			classes = Class.query(Class.instructor == accountname).fetch()
 		else:
-			classes = user.classlist
-			#classes = []
-			#for _class in user.classlist:
-			#	classes.append(_class)
-
-		template_values = {
-			'user': user,
-			'classes': classes,
-			'nextAction': 'show classlist'
-			}
-		self.response.write(template.render(template_values))
-
-	def post(self):
-		accountname = self.session.get('account')
-		user = User.query(User.username == accountname).fetch()[0]
-		class_selection = self.request.get('selection')
-		#class_selection = Class(classname = class_selection.classname)
-		#self.response.out.write('class_selection:')
-		#self.response.out.write(class_selection)
-
-		#students = User.query(User.accounttype == 'student').fetch()
-		#self.response.out.write('students:')
-		#self.response.out.write(students)
-
-		#stdnts = User.query(User.classlist.classname == class_selection.classname)
-		
-		class_select = Class(classname = class_selection)
-		#self.response.write(" ** CLASSNAME ** = " + class_select.classname)
-		usersInClass = User.query(User.classlist == class_select).fetch()
-
-		#self.response.write(' USERSINCLASS: ')
-		#self.response.write(usersInClass)
-		
-
-		template_values = {
-			'user': user,
-			'class': class_select,
-			'users': usersInClass,
-			'nextAction': 'show students in class'
-		 }
-
-		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/EditReviewStudents.html')
-		self.response.write(template.render(template_values))
-
-class DisplayStudentsHandler(BaseHandler):
-	def post(self):
-		accountname = self.session.get('account')
+			classes = Class.query(Class.classname != '').fetch()
+		students = User.query(User.accounttype == 'student').fetch()
 		user = User.query(User.username == accountname).fetch()[0]
 		accounttype = user.accounttype
-		userSelection = self.request.get('userSelection')
-		userChosen = User.query(User.username == userSelection).fetch()[0]
-		#self.response.out.write(students)
-		
-		self.response.write("userChosen: " + userChosen.username)
-
+		_class = user.classlist
+		password = user.password
+		email = user.email
+		firstname = user.firstname
+		lastname = user.lastname
 		template_values = {
-			'user': user,
-			'userChosen': userChosen,
-			'nextAction': 'show student data'
-		}
-		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/EditReviewStudents.html')
+			'accounttype': accounttype,
+			'classes': classes,
+			'SELECTION': False,
+			'students' : students
+			'firstname' : firstname,
+			'lastname' : lastname,
+			'accountname': accountname,
+			'class': _class,
+			'password': password,
+			'email': email
+			}
 		self.response.write(template.render(template_values))
-
-class SaveDataHandler(BaseHandler):
 	def post(self):
-		userFirstName = self.request.get('firstName')
-		userLastName = self.request.get('lastName')
-		userPassword = self.request.get('passWord')
-		user = User.query(  User.firstname == userFirstName and
-							User.lastname == userLastName and 
-							User.password == userPassword).fetch()
-		self.response.write(user)
-		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/EditReviewStudents.html')
+		studentSelected = self.request.get("studentSelected")
+		accountname = User.query(User.username == studentSelected).fetch[0]
+
+		SELECTION = True
+
+		fname = self.request.get('firstName')
+		lname = self.request.get('lastName')
+		pword = self.request.get('passWord')
+
+		accountname = self.session.get('account')
+		user = User.query(User.username == accountname).fetch()[0]
+		user.firstname = fname
+		user.lastname = lname
+		user.password = pword
+		user.put()
+		#template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/EditPersonalInformation.html')
+		#self.response.write("fname = " + fname + ", lname = " + lname + ", pword = " + pword)
+		#self.response.write(template.render())
+		# Should also notify the instructor as to the student's changes.
+		self.redirect('/registrationhomepage')
+'''
+
+
+
+
+
+'''class EditStudentHandler(BaseHandler):
+
+		def get(self):
+		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/AddNewStudents.html')
+		if accountname != '':
+			#user is logged in as accountname
+			user = User.query(User.username == accountname).fetch()[0]
+		template_values = { 'status' :'initial' }
+		self.response.write(template.render(template_values))
+'''		
+
+
+
+"""
+		body = "Congratulations, " + firstNameFromForm + " " + lastNameFromForm + ",\n"
+		body += "You have been given an Instructor Account on the University of Wisconsin Course FAQ System.\n"
+		body += "Your username is " + userName + " and your temporary password is " + passWord + ".\n"
+		
+		sender = 'ronald.zalewski@gmail.com'
+		receivers = [emailAddressFromForm]
+
+		message = firstNameFromForm + " " + lastNameFromForm + " ,\n"
+		message += "You have been assigned an Instructor Account on the\n"
+		message += "Course FAQ System at the University of Wisconsin - Milwaukee.\n\n"
+		message += "Please visit www.faq.com and use the following to register:\n"
+		message += "Account name: " + userName + "\n"
+		message += "Temporary password: " + passWord
+
+		try:
+   			smtpObj = smtplib.SMTP('localhost')
+   			smtpObj.sendmail(sender, receivers, message)         
+   			print "Successfully sent email"
+		except SMTPException:
+   			print "Error: unable to send email"
+"""
+
+
+'''
+	def getUserName(fname, lname):
+		lenFname = len(fname)
+		lenLname = len(lname)
+		if(lenFname >= 3):
+			newUserName=fname[0:2]
+		elif(lenFname == 2):
+			newUserName=fname[0:1] + "X"
+		if(lenLname >= 3):
+			newUserName += lname[0:2]
+		elif(lenLname == 2):
+			newUserName += lname[0:1] + "X"
+		users = User.all()
+		noDup = True
+		for user in users:
+			if (user.username == newUserName):
+				noDup = False
+		if (noDup):
+			return newUserName
+'''
+
+"""
+class reg_AddOrModifyUsers(BaseHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('html/reg_templates/AddOrModifyUsers.html')
 		self.response.write(template.render())
 
+class reg_RegisterInstructorHandler(BaseHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('html/reg_templates/RegisterInstructor.html')
+		self.response.write(template.render())
+
+class reg_AddOrEditStudentHandler(BaseHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('html/reg_templates/AddorEditStudent.html')
+		self.response.write(template.render())
+
+class reg_AddInstructorHandler(BaseHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('html/reg_templates/AddInstructor.html')
+		self.template.write(template.render())
+      
+class reg_EditInstructorHandler(Basehandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('html/reg_templates/EditInstructor.html')
+		self.template.write(template.render())
+
+class reg_AddStudentHandler(Basehandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('html/reg_templates/AddStudent.html')
+		self.template.write(template.render())
+
+class reg_EditStudentHandler(Basehandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('html/reg_templates/EditStudent.html')
+		self.template.write(template.render())
 
 
-
+class reg_RegisterStudentHandler(Basehandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('html/reg_templates/RegisterStudent.html')
+		self.template.write(template.render())
+"""

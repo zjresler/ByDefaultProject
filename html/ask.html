@@ -26,8 +26,25 @@ CLASSES USED:
 	<link rel="stylesheet" type="text/css" href="../css/BeAll.css">
 </head>
 <body>
-	{{banner}}
+
+	<h1 id="SysName">By Default</h1>
+	<!-- banner -->
+	<div class="bannerArea">
+             <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
+                 Welcome {{accountname}}
+                <form action='/logout' method='GET'><input type="submit" value="Logout"></form>
+                <form action='/PastQA' method='GET'><input type="submit" value="View Questions"></form>
+                <form action='/studenthomepage' method='GET'><input type="submit"  value="Home"></form>
+                <form action='/faq' method='GET'><input type="submit"  value="View FAQ"></form>
+    </div>
+
+
+	
+	
+	<!--<div class="pDescrip">Enter your question into the field below and hit submit to send your professor a question.</div>-->
+	
 	<div class="QAMessageArea">
+		{{accountname}}
 		<form class="QAForm" action="/ask" method="post" id="askQuestionForm">
 		<h2 id="AskTitle">Ask your professor a question</h2>
 			Question:<br>
