@@ -9,24 +9,22 @@
 <body>
   
 	<h1 id="SysName">By Default</h1>
-	<div class="bannerArea">
-             <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
-        
-        <form action='/logout' method='GET'><input type="submit" value="Log In"></form>
-        <form {{homeargs}} method='GET'><input type="submit" value="Home"></form>
-            </div>
+	{{banner}}
+	<div class="bodyArea">
+		<form action='/faq' method = 'POST'>
+			<select name="Class">
 
-
-<form action='/faq' method = 'POST'>
-<select name="Class">
-
-      {% for c in class%}
-      <option value="{{c.classname}}">{{c.classname}} </option>
+				  {% for c in class%}
+				  <option value="{{c.classname}}">{{c.classname}} </option>
+				
+				  {%endfor%}
+			</select>
+			<input type = 'submit' value='View FAQ'/>
+		</form>
 	
-      {%endfor%}
-</select>
+	</div>
 
-<input type = 'submit' value='View FAQ'/>
-</form>
+
+
 
 </body>

@@ -7,29 +7,28 @@
 
 <html>
 <head>
-<title>Home Page</title>
+<title>Home</title>
     <link rel="stylesheet" type="text/css" href="/css/BeAll.css">
 </head>
     <body>
-    
-<h1 id="SysName">By Default</h1>
-    <div class="bannerArea">
-        <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
-        Welcome {{accountname}}
-        <form action='/logout' method='GET'><input class="bannerButton" type="submit" value="Logout"></form>
-        {% if accouttype == 'instructor'%}
-        <form action='/review' method='post'><input  class="bannerButton" type="submit" value="View Questions"></form>
-        {% endif %}
-        <form action='/faq' method='GET'><input  class="bannerButton" type="submit"  value="View FAQ"></form>
-
-    </div>
-    <h2 id="homeTitle">Home Page</h2>
+    {{banner}}
+	<div class = "bodyArea">
+		<h2 id="homeTitle">Home</h2>
+		<h4>Click one of the classes below to ask it's instructor a question.</h4>
+		<table>
 		{%for c in classlist%}
-        <!-- css for classLink can just be a copy paste of the "question" class -->
-			<form class="classLink" action="{{path}}" method="{{method}}">
-				<input type = "hidden" name="class" value="{{c.classname}}">
-				<input type = "submit" name="class" value = "{{c.classname}}"><br>
-			</form>
+		<tr>
+			<td>
+				<form action="{{path}}" method="{{method}}">
+					<input type = "hidden" name="class" value="{{c.classname}}">
+					<input class="classLink" type = "submit" name="class" value = "{{c.classname}}"><br>
+				</form>
+			</td>
+		</tr>
 		{%endfor%}
+		</table>
+		
+	</div>
+		
     </body>
 </html>

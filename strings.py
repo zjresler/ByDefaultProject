@@ -29,6 +29,8 @@ BANNER_DEFAULT_0 = """
 	<img id="bannerimg" src="/texture/banner.png" alt="banner image">
 	<h1 id="SysName">By Default</h1>
 	<div class=\"bannerArea\">
+	
+	
 	<table><tr>
 """ #add greeting with accountname after this string
 BANNER_LOGOUT = """

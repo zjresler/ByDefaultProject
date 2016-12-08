@@ -61,44 +61,68 @@ class HomeHandler(BaseHandler):
 		else:
 			self.redirect('/login')
 class StudentHomeHandler(BaseHandler):
+	template_path_get = './html/studenthomepage.html'
+	
+	def draw(self, user, template_values={}):
+		template_values['banner'] = self.build_banner(user)
+		if self.request.method == 'GET':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_get)
+			self.response.write(template.render(template_values))
+		else:
+			exit('Write method called with invalid method.')
 	def get(self):
 		accountname = self.session.get('account')
 		if accountname != '':
 			user = User.query(User.username == accountname).fetch()[0]
 			if user.accounttype == 'student':
-				template = JINJA_ENVIRONMENT.get_template('./html/studenthomepage.html')
-				self.response.write(template.render({
+				self.draw(user, {
 					'accountname': accountname,
 					'accounttype': user.accounttype,
 					'classlist': user.classlist,
 					'path': '/ask',
 					'method': 'get'
-				}))
+				})
 			else:
 				self.redirect('/')
 		else:
 			self.redirect('/')
 
 class InstructorHomeHandler(BaseHandler):
+	template_path_get = './html/studenthomepage.html'
+	def draw(self, user, template_values={}):
+		template_values['banner'] = self.build_banner(user)
+		if self.request.method == 'GET':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_get)
+			self.response.write(template.render(template_values))
+		else:
+			exit('Write method called with invalid method.')
 	def get(self):
 		accountname = self.session.get('account')
 		if accountname != '':
 			user = User.query(User.username == accountname).fetch()[0]
 			if user.accounttype == 'instructor':
 				template = JINJA_ENVIRONMENT.get_template('./html/studenthomepage.html')
-				self.response.write(template.render({
+				self.draw(user, {
 					'accountname': accountname,
 					'accounttype': user.accounttype,
 					'classlist': user.classlist,
 					'path': '/review',
 					'method': 'post'
-				}))
+				})
 			else:
 				self.redirect('/')
 		else:
 			self.redirect('/')
 
 class AdminHandler(BaseHandler):
+	template_path_get = './html/studenthomepage.html'
+	def draw(self, user, template_values={}):
+		template_values['banner'] = self.build_banner(user)
+		if self.request.method == 'GET':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_get)
+			self.response.write(template.render(template_values))
+		else:
+			exit('Write method called with invalid method.')
 	def get(self):
 		accountname = self.session.get('account')
 		if accountname != '':

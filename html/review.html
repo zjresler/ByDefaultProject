@@ -22,15 +22,8 @@ CLASSES USED:
 	<link rel="stylesheet" type="text/css" href="/css/BeAll.css">
 </head>
 <body>
-	<h1 id="SysName">By Default</h1>
+	{{banner}}
 	<h2 id="FAQ">Review Open Questions</h2>
-	<div class="bannerArea">
-        <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
-        Welcome {{accountname}}
-        <form action='/logout' method='GET'><input class="bannerButton" type="submit" value="Logout"></form>
-        <form action='/PastQA' method='GET'><input class="bannerButton" type="submit" value="View Questions"></form>
-        <form action='/faq' method='GET'><input class="bannerButton" type="submit"  value="View FAQ"></form>
-    </div>
 	<!--
 	<form class="SearchFAQForm">
 		Search The FAQ : <input class="single_line_text_field" type="text" name="faqSearch">

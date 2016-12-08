@@ -3,33 +3,28 @@
 	<link href="../css/BeAll.css"  rel="stylesheet" type="text/css"/>
 </head>
 <body>
-	<h1 id="SysName">By Default</h1>
-	<div class="bannerArea">
-             <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
-                <form action='/logout' method='GET'><input type="submit" value="Log In"></form>
-		<form {{homeargs}} method='GET'><input type="submit" value="Home"></form>
-        <form action='/faq' method='GET'><input type="submit"  value="FAQ"></form>
-	</div>
-<table style="width:90%">
-<tr>
+	{{banner}}
+	<div class="bodyArea">
+		<table style="width:90%">
+		<tr>
 
-<th> Question </th>
-<th> Answer </th>
-<th> Category </th>
-</tr>
-<tr>
-	<head>
-{{classname}}</head>	
-{% for c in class|sort(attribute = 'category')%}
-
-		<tr><td>{{c.message}}</td>
-		<td>{{c.response}}</td>
-		
-		<td>{{c.category.get().name}}</td>
+		<th> Question </th>
+		<th> Answer </th>
+		<th> Category </th>
 		</tr>
-{% endfor %}
-  </tr>
-</table>
+		<tr>
+			<th>{{classname}}</th>	
+		{% for c in class|sort(attribute = 'category')%}
+
+				<tr><td>{{c.message}}</td>
+				<td>{{c.response}}</td>
+				
+				<td>{{c.category.get().name}}</td>
+				</tr>
+		{% endfor %}
+		  </tr>
+		</table>
+	</div>
 
 
 

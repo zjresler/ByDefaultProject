@@ -16,6 +16,9 @@ from webapp2_extras import sessions
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
+#class BaseRegistrationBannerThing(BaseHandler):
+#	def draw(self, template_values={}):
+	
 class RegistrationMainHandler(BaseHandler):
 	def get(self): 
 		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/MainPage_AccountAdministration.html')

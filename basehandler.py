@@ -21,7 +21,7 @@ class BannerStandard():
 		#outputs html to browser window
 		exit("Instance Method \"draw\" undefined!")
 class BaseHandler(webapp2.RequestHandler):
-	def error_redirect(self, message_key, path, delay=2):
+	def error_redirect(self, message_key, path, delay=5):
 		template = JINJA_ENVIRONMENT.get_template('./html/error_redirect.html')
 		self.response.write(template.render({
 			'message':STRINGS[message_key],
@@ -29,7 +29,7 @@ class BaseHandler(webapp2.RequestHandler):
 			'path': path
 		}))
 		
-	def success_redirect(self, message_key, path, delay=2):
+	def success_redirect(self, message_key, path, delay=5):
 		template = JINJA_ENVIRONMENT.get_template('./html/success_redirect.html')
 		self.response.write(template.render({
 			'message':STRINGS[message_key],
