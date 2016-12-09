@@ -134,7 +134,8 @@ app = webapp2.WSGIApplication([
     ('/addinstructor', AddInstructorHandler),
     ('/addstudent', AddStudentHandler),
 	('/PastQA', PastQAHandler),
-	('/faq', FAQHandler)
+	('/faq', FAQHandler),
+	('/register', RegisterHandler)
 #	('/enroll', AddUserToClass)
     ], config=config, debug=True)
 
