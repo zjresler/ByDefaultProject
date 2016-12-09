@@ -1,9 +1,11 @@
+
 import webapp2
 import smtplib
 import random
 import os
 import urllib
 import jinja2
+import re
 
 from db_entities import *
 from basehandler import BaseHandler
@@ -12,10 +14,30 @@ from login import *
 from smtplib import SMTPException
 from google.appengine.ext import ndb
 from webapp2_extras import sessions
+from google.appengine.api.mail import EmailMessage
+from google.appengine.api import app_identity
+from google.appengine.ext import ndb
+
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
+class Register():
+	@staticmethod
+	def make_mail_message(sender,to,subject,body):
+		EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
+		email = None
+		if EMAIL_REGEX.match(to):
+			email = EmailMessage()
+			email.sender = sender
+			email.to = to
+			email.subject = subject
+			email.body = body
+			email.check_initialized()
+		return email
+	
+	
 class RegistrationMainHandler(BaseHandler):
 	def get(self): 
 		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/MainPage_AccountAdministration.html')
@@ -87,24 +109,62 @@ class AddStudentHandler(BaseHandler):
 		
 		self.response.write(template.render(template_values))
 	def post(self):
-		classFromForm = Class(classname=self.request.get('class'))
-		textFromForm = self.request.get('textArea').strip() + '*'
-
+		classFromForm = None
+		if len(Class.query(Class.classname == self.request.get('class')).fetch()) == 0:
+			classFromForm = Class(classname=self.request.get('class'))
+			classFromForm.put()
+		else:
+			classFromForm = Class.query(Class.classname == self.request.get('class')).fetch()[0]
+		textFromForm = self.request.get('textArea').strip()
+		
 		accountname = self.session.get('account')
 		user = User.query(User.username == accountname).fetch()[0]
 		accounttype = user.accounttype
 
-		instructorAssigned = ""
+		
+		instructorAssigned = self.request.get('instructorAssigned')
+		instructor = User.query(User.username == instructorAssigned).fetch()[0]
+		instructor.classlist.append(classFromForm)
+		instructor.put()
+		#split on commas
+		emails = textFromForm.split(',')
+		for address in emails:
+			#check for valid email syntax
+			EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
+			#if valid
+			students = User.query(User.username == address).fetch()
+			if len(students) == 0:
+				sender = 'Question App Support <admin@{}.appspotmail.com>'.format(app_identity.get_application_id())
+				to = address
+				subject = 'Activation Your Account'
+				body = 'Please click the following link to create your account<br>  {}.appspot.com/register?username={}&classkey={}'.format(app_identity.get_application_id(),address.split('@')[0],classFromForm.key.urlsafe())
+				email = Register().make_mail_message(sender,to,subject,body)
+				if email != None:
+					email.send()
+			else:
+				student = students[0]
+				classList = student.classlist
+				#already in class
+				if (classFromForm in classList):
+					pass
+				#add student to new class
+				else:
+					student.classlist.append(classFromForm)
+					student.put()
+					
+		self.redirect('/registerhomepage')
+					
+"""		
 		# IF USER IS AN ADMIN, GET THE INSTRUCTOR FOR THE NEW CLASS
 		if(accounttype == 'admin'): 
 			self.request.get('instructorAssigned')
 		else:
 			# IF USER IS AN INSTRUCTOR, ADD THE INSTRUCTOR TO THE CLASS IF NOT ALREADY ASSIGNED
 			userClassList = user.classlist
-			self.response.write("classFromForm:")
-			self.response.write(classFromForm)
-			self.response.write("userClassList:")
-			self.response.write(userClassList)
+	#		self.response.write("classFromForm:")
+	#		self.response.write(classFromForm)
+	#		self.response.write("userClassList:")
+	#		self.response.write(userClassList)
 			if not(classFromForm in userClassList): #not (classnameFromForm in user.classlist):
 				user.classlist.append(classFromForm)
 				user.put()
@@ -176,6 +236,7 @@ class AddStudentHandler(BaseHandler):
 		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/DisplayNewStudents.html')
 		template_values = { "log": passwordLog, "class": classFromForm.classname }
 		self.response.write(template.render(template_values))
+		"""
 
 class EditPersonalDataHandler(BaseHandler):
 	def get(self):
@@ -298,7 +359,30 @@ class SaveDataHandler(BaseHandler):
 		self.response.write(user)
 		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/EditReviewStudents.html')
 		self.response.write(template.render())
+class RegisterHandler(BaseHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/register.html')
 
+		username = self.request.get('username')
+		classkey = self.request.get('classkey')
+		accounttype = 'student'
 
-
-
+		template_values = { 'classkey' : classkey, 'username' : username, 'accounttype': accounttype}
+		self.response.write(template.render(template_values))
+	def post(self):
+		uname = self.request.get('username')
+		pword = self.request.get('password')
+		fname = self.request.get('firstname')
+		lname = self.request.get('lastname')
+		eml = uname
+		key = self.request.get('classkey')
+		type = 'student'
+		
+		if(fname == None) or (lname == None) or (pword == None) or (len(pword) < 8):
+			self.redirect('/register?username=' + uname + '&classkey='+key)
+		else:
+			newStudent = User(username = uname,password = pword,lastname = lname,firstname = fname,email = eml,accounttype = type)
+			classy = Key(urlsafe = key).get()
+			newStudent.classlist.append(classy)
+			newStudent.put()
+			self.redirect('/')
