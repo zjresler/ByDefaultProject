@@ -8,18 +8,18 @@
 		<table style="width:90%">
 		<tr>
 
-		<th> Question </th>
-		<th> Answer </th>
-		<th> Category </th>
+		<th class = "notBanner"> Question </th>
+		<th class = "notBanner"> Answer </th>
+		<th class = "notBanner"> Category </th>
 		</tr>
 		<tr>
-			<th>{{classname}}</th>	
+			<th class = "notBanner">{{classname}}</th>	
 		{% for c in class|sort(attribute = 'category')%}
 
-				<tr><td>{{c.message}}</td>
-				<td>{{c.response}}</td>
+				<tr><td class = "notBanner"><textarea class="messageArea" disabled name = "dummyarea">{{c.message}}</textarea></td>
+				<td class = "notBanner">{{c.response}}</td>
 				
-				<td>{{c.category.get().name}}</td>
+				<td class = "notBanner">{{c.category.get().name}}</td>
 				</tr>
 		{% endfor %}
 		  </tr>

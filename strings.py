@@ -31,7 +31,7 @@ BANNER_DEFAULT_0 = """
 	<div class=\"bannerArea\">
 	
 	
-	<table><tr>
+	<table id = "bannerTable" ><tr>
 """ #add greeting with accountname after this string
 BANNER_LOGOUT = """
 	<td><form action="/logout" method="GET"><input type="submit" value="Logout"></form></td>

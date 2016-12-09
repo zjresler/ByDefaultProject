@@ -7,10 +7,10 @@ body{
 	left: 0px;
 	top: 0px;
 	width: 100%;
-	height: 20%;
+	height: 100px;
 }
 #SysName{
-	position: absolute;
+	position: fixed;
 	text-align: center;
 	top: 0px;
 	width: 100%;
@@ -76,8 +76,9 @@ button{
 }
 .bannerArea{
 	position: fixed;
-	right: 0%;
-	top: 19%;
+	margin: 0 auto;
+	top: 95px;
+	width: 100%;
 }
 #askQuestionForm{
 	position: fixed;
@@ -131,6 +132,7 @@ input[type=submit]:hover {
 	
 	margin: 0 auto;
 	padding-left: 10px;
+	width: 100%;
 	/*margin: 8px 40px;
 	margin-top: 125px;
 	border-left: ridge;*/
@@ -215,7 +217,7 @@ input[type=submit]:hover {
 }
 .bodyArea{
 	position: relative;
-	top: 27%;
+	top: 200px;
 	text-align: center;
 }
 .classLink{
@@ -223,7 +225,21 @@ input[type=submit]:hover {
 	height: 100%;
 	background-color: lightblue;
 }
+.notBanner{
+	padding: 10px;
+	text-align: left;
+}
+table{
+	border
+}
 table.center{
-	
+	width: 100%;
 	margin: 0 auto;
+}
+#bannerTable{
+	margin: 0 auto;
+}
+.messageArea{
+	width: 100%;
+	height: 100%;
 }
