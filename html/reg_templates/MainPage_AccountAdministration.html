@@ -1,17 +1,18 @@
 <head>
+<title>ADMIN-Home</title>
 <link type="text/css" rel="stylesheet" href="../css/BeAll.css">
 </head>
 
 <body>
 <h1><strong>MAIN PAGE - Account Administration</strong></h1>
 
-{% if accounttype == 'admin' or accounttype == 'instructor' %}
+{% if user.accounttype == 'admin' or user.accounttype == 'instructor' %}
 <h2> Add/Edit Users </h2>
 {% endif %}
-<h3> Welcome, <i>{{ account }}</i>, Account type: <i>{{ accounttype }}</i></h3>
+<h3> Welcome, {{ user.firstname + ' ' + user.lastname }}, account type: {{ user.accounttype }}</h3>
 <br>
 <div class="Administrative-Main-Menu">
-{% if accounttype == 'admin' %}
+{% if user.accounttype == 'admin' %}
 <form action='/addinstructor'>
     <input id="addInstructor" type="submit" name="addInstructor" value="SELECT"><strong> Add New Instructor </strong>
     <br>
@@ -23,32 +24,32 @@
 </form>
 {% endif %}
 
-{% if accounttype == 'admin' or accounttype == 'instructor' %}
+{% if user.accounttype == 'admin' or user.accounttype == 'instructor' %}
 <form action='/addstudent'>
     <input type="submit" name="addStudent" value="SELECT"><strong> Add New Student </strong>
     <br>
 </form>
 
-<form action='/editstudent'>
-    <input id="studentEdit" type="submit" name="toStudentEdit" value="SELECT"><strong> Edit Student User Information ***not yet implemented ***</strong>
+<form action='/editreviewstudents'>
+    <input id="studentEditReview" type="submit" name="toStudentEditReview" value="SELECT"><strong> Edit/Review Students </strong>
     <br />
 </form>
 {% endif %}
 
-{% if accounttype == 'student' or accounttype == 'instructor' %}
+{% if user.accounttype == 'student' or user.accounttype == 'instructor' %}
 <form action='/editpersonalinformation'>
     <input type="submit" value="SELECT"><strong> Edit Personal Information </strong>
     <br>
 </form>
 {% endif %}
 
-{% if accounttype == "instructor" %}
-<form action='/studenthomepage'>
+{% if user.accounttype == "instructor" %}
+<form action='/userhomepage'>
     <input id="returnToHome" type="submit" value="SELECT"><strong> Return to the Instructor Home Page </strong>
     <br>
 </form>
-{% elif accounttype == "student" %}
-<form action='/studenthomepage'>
+{% elif user.accounttype == "student" %}
+<form action='/userhomepage'>
     <input id="returnToHome" type="submit" value="SELECT"><strong> Return to the Student Home Page </strong>
     <br>
 </form>
