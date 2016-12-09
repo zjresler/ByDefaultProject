@@ -137,7 +137,7 @@ class AddStudentHandler(BaseHandler):
 				sender = 'Question App Support <admin@{}.appspotmail.com>'.format(app_identity.get_application_id())
 				to = address
 				subject = 'Activation Your Account'
-				body = 'Please click the following link to create your account<br>  {}.appspot.com/register?username={}&classkey={}'.format(app_identity.get_application_id(),address.split('@')[0],classFromForm.key.urlsafe())
+				body = 'Please click the following link to create your account  http://{}.appspot.com/register?username={}&classkey={}'.format(app_identity.get_application_id(),address.split('@')[0],classFromForm.key.urlsafe())
 				email = Register().make_mail_message(sender,to,subject,body)
 				if email != None:
 					email.send()
