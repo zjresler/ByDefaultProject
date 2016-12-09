@@ -6,11 +6,12 @@
 	<h1 id="SysName">By Default</h1>
 	<div class="bannerArea">
              <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
-                <form action='/logout' method='GET'><input type="submit" value="Log In"></form>
+        Logged in as:  {{ accountname }}
+        <form action='/logout' method='GET'><input type="submit" value="Logout"></form>
 		<form {{homeargs}} method='GET'><input type="submit" value="Home"></form>
-        <form action='/faq' method='GET'><input type="submit"  value="FAQ"></form>
+        <form action='/PastQA' method='GET'><input type="submit"  value="View Questions"></form>
 	</div>
-<table style="width:90%">
+<table style="width:100%">
 <tr>
 
 <th> Question </th>
@@ -20,11 +21,10 @@
 <tr>
 	<head>
 {{classname}}</head>	
-{% for c in class|sort(attribute = 'category')%}
+{% for c in class%}
 
 		<tr><td>{{c.message}}</td>
 		<td>{{c.response}}</td>
-		
 		<td>{{c.category.get().name}}</td>
 		</tr>
 {% endfor %}

@@ -11,10 +11,11 @@
 	<h1 id="SysName">By Default</h1>
 	<div class="bannerArea">
              <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
-        
-        <form action='/logout' method='GET'><input type="submit" value="Log In"></form>
+        Logged in as:  {{ accountname }}
+        <form action='/logout' method='GET'><input type="submit" value="Logout"></form>
         <form {{homeargs}} method='GET'><input type="submit" value="Home"></form>
-            </div>
+        <form action='/faq' method='GET'><input type="submit"  value="View FAQ"></form>
+    </div>
 
 
 <form action='/faq' method = 'POST'>
