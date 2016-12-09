@@ -23,37 +23,33 @@ CLASSES USED:
 </head>
 <body>
 	{{banner}}
-	<h2 id="FAQ">Review Open Questions</h2>
-	<!--
-	<form class="SearchFAQForm">
-		Search The FAQ : <input class="single_line_text_field" type="text" name="faqSearch">
-		<input class="button" type="submit" value="Search">
-	</form>
-	-->
-	<table class="questionAnswerArea">
-		<tr class="question">
-			{%if instructor%}
-				<th>Username</th>
-			{%endif%}
-			<th>Question</th><th>Response</th></tr>
-		
-		{%for q in questions%}
+	<div class="bodyArea">
+		<h2 id="FAQ">Review Open Questions</h2>
+		<table class="questionAnswerArea">
 			<tr class="question">
 				{%if instructor%}
-					<td>{{q.key.parent().get().username}}</td>
+					<th>Username</th>
 				{%endif%}
-				<td>{{q.message}}</td><td>{{q.response}}</td>
-				
+				<th>Question</th><th>Response</th></tr>
+			
+			{%for q in questions%}
+				<tr class="question">
+					{%if instructor%}
+						<td>{{q.key.parent().get().username}}</td>
+					{%endif%}
+					<td>{{q.message}}</td><td>{{q.response}}</td>
 					
-						<td><form action='/respond' method = 'get'>
-							<input type = 'hidden' name = 'questionkey' value='{{q.key.urlsafe()}}'/>
-							<input type ='submit' name = 'Respond' value = 'Respond'/>
-						</form></td>
-			
-			
-			</tr>
-		{%endfor%}
-	</table>
+						
+							<td><form action='/respond' method = 'get'>
+								<input type = 'hidden' name = 'questionkey' value='{{q.key.urlsafe()}}'/>
+								<input type ='submit' name = 'Respond' value = 'Respond'/>
+							</form></td>
+				
+				
+				</tr>
+			{%endfor%}
+		</table>
 
+	</div>
 </body>
 </html>

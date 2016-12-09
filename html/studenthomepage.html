@@ -10,25 +10,25 @@
 <title>Home</title>
     <link rel="stylesheet" type="text/css" href="/css/BeAll.css">
 </head>
-    <body>
-    {{banner}}
-	<div class = "bodyArea">
-		<h2 id="homeTitle">Home</h2>
-		<h4>Click one of the classes below to ask it's instructor a question.</h4>
-		<table>
-		{%for c in classlist%}
-		<tr>
-			<td>
-				<form action="{{path}}" method="{{method}}">
-					<input type = "hidden" name="class" value="{{c.classname}}">
-					<input class="classLink" type = "submit" name="class" value = "{{c.classname}}"><br>
-				</form>
-			</td>
-		</tr>
-		{%endfor%}
-		</table>
-		
-	</div>
-		
-    </body>
+<body>
+{{banner}}
+<div class = "bodyArea">
+	<h2 id="homeTitle">Home</h2>
+	<h4>Click one of the classes below to begin.</h4>
+	<table class = "center">
+	{%for c in classlist%}
+	<tr>
+		<td>
+			<form action="{{path}}" method="{{method}}">
+				<input type = "hidden" name="class" value="{{c.classname}}">
+				<input class="classLink" type = "submit" name="class" value = "{{c.classname}}"><br>
+			</form>
+		</td>
+	</tr>
+	{%endfor%}
+	</table>
+	
+</div>
+	
+</body>
 </html>

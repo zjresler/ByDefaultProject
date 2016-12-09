@@ -1,23 +1,24 @@
-<!DOCTYPE html>
 <html>
 <head>
 	<title>{{title}}</title>
-	<link rel="stylesheet" type="text/css" href="../css/BeAll.css">
+	<link rel="stylesheet" type="text/css" href="/css/BeAll.css">
 </head>
 <body>
 	{{banner}}
-	<h2 id="FAQ">Review Past Questions and Answers Questions </h2>
-	
-
-	<table class="questionAnswerArea">
-		<tr></th><th>Question</th><th>Respondent</th><th>Response</th></tr>
-		{%for q in questions %}
-		<tr class="question">
-			<td>{{ q.message }}</td>{%if q.response!=None%}<td>{%if q.respondentUID!=None%}{{q.respondentUID.get().username}}{%endif%}</td><td>{{ q.response }}</td>{%endif%}	
-		</tr>
-		{%endfor%}
+	<div class = "bodyArea">
+		<h2>View Questions</h2>
 		
-	</table>
 
+		<table class="questionAnswerArea">
+			<tr></th><th>Question</th><th>Respondent</th><th>Response</th></tr>
+			{%for q in questions %}
+			<tr class="question">
+				<td>{{ q.message }}</td>{%if q.response!=None%}<td>{%if q.respondentUID!=None%}{{q.respondentUID.get().username}}{%endif%}</td><td>{{ q.response }}</td>{%endif%}	
+			</tr>
+			{%endfor%}
+			
+		</table>
+
+	</div>
 </body>
 </html>

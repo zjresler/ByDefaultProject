@@ -72,6 +72,9 @@ class StudentHomeHandler(BaseHandler):
 			exit('Write method called with invalid method.')
 	def get(self):
 		accountname = self.session.get('account')
+		
+		self.session['class'] = ''
+		
 		if accountname != '':
 			user = User.query(User.username == accountname).fetch()[0]
 			if user.accounttype == 'student':
@@ -98,6 +101,8 @@ class InstructorHomeHandler(BaseHandler):
 			exit('Write method called with invalid method.')
 	def get(self):
 		accountname = self.session.get('account')
+		self.session['class'] = ''
+			
 		if accountname != '':
 			user = User.query(User.username == accountname).fetch()[0]
 			if user.accounttype == 'instructor':
