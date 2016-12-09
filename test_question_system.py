@@ -9,6 +9,7 @@ import main
 
 #from main import TEST_OUT
 from question_system import *
+from registration import *
 from db_entities import *
 from basehandler import BaseHandler
 from strings import *
@@ -396,6 +397,15 @@ class QuestionTests(unittest.TestCase):
 		radmin = Key(urlsafe=thing).get()
 		self.assertFalse(radmin.key==None)
 		self.assertTrue(radmin.key == self.admin.key)
+		
+	def test_bad_address(self):
+		self.assertTrue(Register().make_mail_message(subject = 'test', body = 'test', sender ='test', to='test') == None)
+	def test_invalid_address1(self):
+		self.assertTrue(Register().make_mail_message(subject = 'test', body = 'test', sender ='test', to='test@googles') == None)
+	def test_invalid_address2(self):
+		self.assertTrue(Register().make_mail_message(subject = 'test', body = 'test', sender ='test', to='test.com') == None)
+	def test_valid_address(self):
+		self.assertTrue(Register().make_mail_message(subject = 'test', body = 'test', sender ='test', to='test@gmail.com')!= None)
 class FakeFile():
 	data = ''
 	def write(self, str):
