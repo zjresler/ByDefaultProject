@@ -20,21 +20,22 @@ class BannerStandard():
 	def draw(self, user):
 		#outputs html to browser window
 		exit("Instance Method \"draw\" undefined!")
-class BaseHandler(webapp2.RequestHandler):
+class BaseHandler(BannerStandard, webapp2.RequestHandler):
 	def error_redirect(self, message_key, path, delay=5):
 		template = JINJA_ENVIRONMENT.get_template('./html/error_redirect.html')
 		self.response.write(template.render({
 			'message':STRINGS[message_key],
 			'delay': str(delay),
-			'path': path
+			'path': path,
+			'banner': BANNER_DEFAULT_0 + BANNER_END
 		}))
-		
 	def success_redirect(self, message_key, path, delay=5):
 		template = JINJA_ENVIRONMENT.get_template('./html/success_redirect.html')
 		self.response.write(template.render({
 			'message':STRINGS[message_key],
 			'delay': str(delay),
-			'path': path
+			'path': path,
+			'banner': BANNER_DEFAULT_0 + BANNER_END
 		}))
 	def validate_user(self, accountname, accounttype=''):
 		if accountname != '':
@@ -78,4 +79,3 @@ class BaseHandler(webapp2.RequestHandler):
 			html_out = html_out + BANNER_LOGIN
 			
 		return ( html_out+BANNER_END )
-	

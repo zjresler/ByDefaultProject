@@ -35,7 +35,7 @@ class LogoutHandler(BaseHandler):
 		self.session['account'] = ''
 		self.session['accounttype'] = ''
 		template = JINJA_ENVIRONMENT.get_template('./html/login.html')
-		self.response.write(template.render())
+		self.response.write(template.render({'banner': BANNER_DEFAULT_0 + BANNER_END}))
 
 
 class HomeHandler(BaseHandler):
@@ -74,9 +74,21 @@ class StudentHomeHandler(BaseHandler):
 		accountname = self.session.get('account')
 		
 		self.session['class'] = ''
+		html_debug = """
 		
+			<div class=\"console\">
+				<table class="consoleTable">
+				<tr><th>Variable Name</th><th>Value as string</th></tr>
+				"""
+			
 		if accountname != '':
 			user = User.query(User.username == accountname).fetch()[0]
+			html_debug = html_debug + """
+				<tr><td>user</td><td>"""+str(user)+"""</td></tr>
+				</table>
+			</div>
+			
+			"""
 			if user.accounttype == 'student':
 				self.draw(user, {
 					'accountname': accountname,
@@ -89,7 +101,7 @@ class StudentHomeHandler(BaseHandler):
 				self.redirect('/')
 		else:
 			self.redirect('/')
-
+		self.response.write(html_debug)
 class InstructorHomeHandler(BaseHandler):
 	template_path_get = './html/studenthomepage.html'
 	def draw(self, user, template_values={}):

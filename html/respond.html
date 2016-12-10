@@ -1,40 +1,10 @@
-<!DOCTYPE html>
-<!--
-CLASSES USED:
-	bannerArea: attached to <div>
-		div containing banner elements
-		
-	bannerImage: attached to <img>
-		refers to the banner image used at the top of the screen
-	
-	bannerButton: attached to <button>
-		refers to the buttons on the banner
-		
-		ids:
-			login, viewQuestions, viewFAQ
-
-	QAMessageArea: attached to <div>
-		textarea where a question is entered
-		ids:
-			askQuestionForm
-
-	QAForm: attached to <form>
-		form where a question or a question's response is input
-	
-	displayText: attached to <div>
-		div that holds elements that display text, mainly the question asked.
-	
--->
 <html>
-	<head>
-		<title>Respond</title>
-		<link rel="stylesheet" type="text/css" href="/css/BeAll.css">
-	</head>
-	
-	<body>
-
-		{{banner}}
-
+<head>
+	<title>Respond</title>
+	<link rel="stylesheet" type="text/css" href="/css/BeAll.css">
+</head>
+<body>
+	<div class="bodyArea">
 		<h2 id="Resp">Respond to {{question.key.parent().get().username}}'s question</h2>
 		
 		<!-- show question to be answered -->
@@ -83,5 +53,7 @@ CLASSES USED:
 			</table>
 			
 		</div>
-	</body>
+	</div>
+	{{banner}}
+</body>
 </html>

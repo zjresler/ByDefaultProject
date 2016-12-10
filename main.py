@@ -106,7 +106,7 @@ class LoginHandler(BaseHandler):
 		accountname = self.session.get('account')
 		accounttype = self.session.get('accounttype')
 		template = JINJA_ENVIRONMENT.get_template('./html/login.html')
-		self.response.write(template.render())
+		self.response.write(template.render({'banner': BANNER_DEFAULT_0 + BANNER_END}))
 
 
 
