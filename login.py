@@ -47,7 +47,7 @@ class HomeHandler(BaseHandler):
 			
 			if user[0].password == password:
 				self.session['account'] = username
-				self.session['accountype'] = user[0].accounttype
+				self.session['accounttype'] = user[0].accounttype
 				if(user[0].accounttype == 'student'):
 					self.redirect('/studenthomepage')
 				elif(user[0].accounttype == 'admin'):
@@ -102,6 +102,7 @@ class StudentHomeHandler(BaseHandler):
 		else:
 			self.redirect('/')
 		self.response.write(html_debug)
+		
 class InstructorHomeHandler(BaseHandler):
 	template_path_get = './html/studenthomepage.html'
 	def draw(self, user, template_values={}):

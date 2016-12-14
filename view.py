@@ -94,7 +94,7 @@ class PastQAHandler(BaseHandler):
 				template = JINJA_ENVIRONMENT.get_template('./html/PastQA.html')
 				self.draw(user, template_values)
 			else:
-				self.response.write(accounttype+'<br/>')
+				
 				super(PastQAHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
 				
 			
