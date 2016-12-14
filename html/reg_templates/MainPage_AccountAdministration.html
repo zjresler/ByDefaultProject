@@ -22,6 +22,10 @@
     <input id="editInstructor" type="submit" name="editInstructor" value="SELECT"><strong> Edit Instructor User Information </strong>
     <br>
 </form>
+<form action='/addtoclass'>
+    <input id="addtoclass" type="submit" name="addtoclass" value="SELECT"><strong> Add Instructor to a class </strong>
+    <br>
+</form>
 {% endif %}
 
 {% if user.accounttype == 'admin' or user.accounttype == 'instructor' %}

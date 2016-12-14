@@ -59,7 +59,7 @@ class AddInstructorHandler(BaseHandler):
 		firstNameFromForm = self.request.get('firstname')
 		lastNameFromForm = self.request.get('lastname')
 		emailAddressFromForm = self.request.get('emailaddress')
-		userName = emailAddressFromForm
+		userName = emailAddressFromForm.split("@")[0]
 		outcome = ''
 
 		user = User.query(User.username == userName, User.accounttype == "instructor").fetch()
@@ -83,7 +83,15 @@ class AddInstructorHandler(BaseHandler):
 			self.response.write(template.render(template_values))
 			
 		else:
-			passWord = str(random.randrange(100000,1000000))
+		
+			sender = 'Question App Support <admin@{}.appspotmail.com>'.format(app_identity.get_application_id())
+			to = emailAddressFromForm
+			subject = 'Activation Your Account'
+			body = 'Please click the following link to create your account  http://{}.appspot.com/registerinstructor?username={}'.format(app_identity.get_application_id(),emailAddressFromForm.split('@')[0])
+			email = Register().make_mail_message(sender,to,subject,body)
+			if email != None:
+				email.send()
+		"""	passWord = str(random.randrange(100000,1000000))
 			template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/AddNewInstructor.html')
 			template_values = { 'outcome': 'unique', 'password': passWord, 'email': userName }
 			self.response.write(template.render(template_values))
@@ -92,9 +100,9 @@ class AddInstructorHandler(BaseHandler):
 				email=emailAddressFromForm,accounttype="instructor",)
 			newUser.put()
 			
-			
+		"""	
 		
-		#self.redirect('/registrationhomepage')
+		self.redirect('/registrationhomepage')
 class AddStudentHandler(BaseHandler):
 	def get(self):
 		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/AddNewStudents.html')
@@ -132,27 +140,30 @@ class AddStudentHandler(BaseHandler):
 			#check for valid email syntax
 			EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 			#if valid
-			students = User.query(User.username == address).fetch()
-			if len(students) == 0:
-				sender = 'Question App Support <admin@{}.appspotmail.com>'.format(app_identity.get_application_id())
-				to = address
-				subject = 'Activation Your Account'
-				body = 'Please click the following link to create your account  http://{}.appspot.com/register?username={}&classkey={}'.format(app_identity.get_application_id(),address.split('@')[0],classFromForm.key.urlsafe())
-				email = Register().make_mail_message(sender,to,subject,body)
-				if email != None:
-					email.send()
+			if not EMAIL_REGEX.match(address):
+				pass
 			else:
-				student = students[0]
-				classList = student.classlist
-				#already in class
-				if (classFromForm in classList):
-					pass
-				#add student to new class
+				students = User.query(User.username == address.split('@')[0]).fetch()
+				if len(students) == 0:
+					sender = 'Question App Support <admin@{}.appspotmail.com>'.format(app_identity.get_application_id())
+					to = address
+					subject = 'Activation Your Account'
+					body = 'Please click the following link to create your account  http://{}.appspot.com/register?username={}&classkey={}'.format(app_identity.get_application_id(),address.split('@')[0],classFromForm.key.urlsafe())
+					email = Register().make_mail_message(sender,to,subject,body)
+					if email != None:
+						email.send()
 				else:
-					student.classlist.append(classFromForm)
-					student.put()
-					
-		self.redirect('/registerhomepage')
+					student = students[0]
+					classList = student.classlist
+					#already in class
+					if (classFromForm in classList):
+						pass
+					#add student to new class
+					else:
+						student.classlist.append(classFromForm)
+						student.put()
+						
+		self.redirect('/registrationhomepage')
 					
 """		
 		# IF USER IS AN ADMIN, GET THE INSTRUCTOR FOR THE NEW CLASS
@@ -359,30 +370,122 @@ class SaveDataHandler(BaseHandler):
 		self.response.write(user)
 		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/EditReviewStudents.html')
 		self.response.write(template.render())
-class RegisterHandler(BaseHandler):
+class RegisterStudentHandler(BaseHandler):
 	def get(self):
 		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/register.html')
 
 		username = self.request.get('username')
 		classkey = self.request.get('classkey')
+		error = self.request.get('error')
+		errormessage = ''
 		accounttype = 'student'
+		if error == 1 or error == '1':
+			errormessage = "Password needs to be at least 8 characters long"
+		elif error == 2 or error == '2':
+			errormessage = "Passwords do not match"
+		elif error == 3 or error == '3':
+			errormessage = "First name or Last name not filled in"
 
-		template_values = { 'classkey' : classkey, 'username' : username, 'accounttype': accounttype}
+		template_values = { 'classkey' : classkey, 'username' : username, 'accounttype': accounttype, 'error':errormessage}
 		self.response.write(template.render(template_values))
 	def post(self):
 		uname = self.request.get('username')
 		pword = self.request.get('password')
+		pword2 = self.request.get('password2')
 		fname = self.request.get('firstname')
 		lname = self.request.get('lastname')
-		eml = uname
+		eml = self.request.get('email')
 		key = self.request.get('classkey')
 		type = 'student'
 		
-		if(fname == None) or (lname == None) or (pword == None) or (len(pword) < 8):
-			self.redirect('/register?username=' + uname + '&classkey='+key)
+		if(fname == None) or (lname == None) or (pword == None) or (len(pword)) < 8 or pword != pword2:
+		#error codes
+		#1 pwd not long enough
+		#2 pwd no match
+		#3 fname,lname not filled out
+			if (len(pword)) < 8:
+				self.redirect('/register?username=' + uname + '&classkey='+key+'&error=1')
+			if pword != pword2:
+				self.redirect('/register?username=' + uname + '&classkey='+key+'&error=2')
+			if "@" not in eml:
+				self.redirect('/register?username=' + uname + '&classkey='+key+'&error=4')
+			if "." not in eml:
+				self.redirect('/register?username=' + uname + '&classkey='+key+'&error=4')
+			self.redirect('/register?username=' + uname + '&classkey='+key+'&error=3')
 		else:
 			newStudent = User(username = uname,password = pword,lastname = lname,firstname = fname,email = eml,accounttype = type)
 			classy = Key(urlsafe = key).get()
 			newStudent.classlist.append(classy)
 			newStudent.put()
 			self.redirect('/')
+				
+class RegisterInstructorHandler(BaseHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/RegisterInstructor.html')
+
+		username = self.request.get('username')
+		classkey = self.request.get('classkey')
+		error = self.request.get('error')
+		errormessage = ''
+		accounttype = 'instructor'
+		if error == 1 or error == '1':
+			errormessage = "Password needs to be at least 8 characters long"
+		elif error == 2 or error == '2':
+			errormessage = "Passwords do not match"
+		elif error == 3 or error == '3':
+			errormessage = "First name or Last name not filled in"
+
+		template_values = { 'classkey' : classkey, 'username' : username, 'accounttype': accounttype, 'error':errormessage}
+		self.response.write(template.render(template_values))
+	def post(self):
+		uname = self.request.get('username')
+		pword = self.request.get('password')
+		pword2 = self.request.get('password2')
+		fname = self.request.get('firstname')
+		lname = self.request.get('lastname')
+		eml = self.request.get('email')
+		#key = self.request.get('classkey')
+		type = 'instructor'
+		
+		if(fname == None) or (lname == None) or (pword == None) or (len(pword)) < 8 or pword != pword2:
+		#error codes
+		#1 pwd not long enough
+		#2 pwd no match
+		#3 fname,lname not filled out
+		#4 invalid email
+			if (len(pword)) < 8:
+				self.redirect('/registerinstructor?username=' + uname + '&classkey='+key+'&error=1')
+			if pword != pword2:
+				self.redirect('/registerinstructor?username=' + uname + '&classkey='+key+'&error=2')
+			if "@" not in eml:
+				self.redirect('/registerinstructor?username=' + uname + '&classkey='+key+'&error=4')
+			if "." not in eml:
+				self.redirect('/registerinstructor?username=' + uname + '&classkey='+key+'&error=4')
+			self.redirect('/register?username=' + uname + '&classkey='+key+'&error=3')
+		else:
+			newInstructor = User(username = uname,password = pword,lastname = lname,firstname = fname,email = eml,accounttype = type)
+			#classy = Key(urlsafe = key).get()
+			#newInstructor.classlist.append(classy)
+			newInstructor.put()
+			self.redirect('/')
+			
+class AddInstructorToClassHandler(BaseHandler):
+	def get(self):
+		instructors = User.query(User.accounttype == 'instructor').fetch()
+		classes = Class.query().fetch()
+		
+		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/addtoclass.html')
+		
+		template_values = { 'classes' : classes, 'instructors' : instructors}
+		self.response.write(template.render(template_values))
+		
+	def post(self):
+		instructorAssigned = self.request.get("instructorAssigned")
+		classAssigned = self.request.get("classAssigned")
+		
+		instructor = User.query(User.username == instructorAssigned).fetch()[0]
+		classy = Class.query(Class.classname == classAssigned).fetch()[0]
+		instructor.classlist.append(classy)
+		instructor.put()
+		self.redirect('/registrationhomepage')
+		

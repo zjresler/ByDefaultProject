@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>register page</title></head>
+<body>
+Register your instructor account:
+
+<form action='/registerinstructor' method='POST' id='userform'>
+
+
+			User Name: <br>
+			<input  type ="text" name="username1" disabled value='{{username}}' /><br>
+			<input  type ="hidden" name="username"  value='{{username}}' /><br>
+
+			Email: <br>
+			<input type="text" name ="email" /><br>
+			
+			First Name: <br>
+			<input  type ="text" name="firstname"/>*<br>
+
+			Last Name: <br>
+			<input  type="text" name="lastname"/>*<br>
+
+			Password:<br>
+			<input type="password" name="password"/>*<br>
+		
+			Retype Password:<br>
+			<input type="password" name="password2"/>*<br>
+			
+
+
+<input type="submit" value="Register">
+
+</form>
+
+
+</body>
+
+</html>
