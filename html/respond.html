@@ -6,27 +6,19 @@
 <body>
 	<div class="bodyArea">
 		<h2 id="Resp">Respond to {{question.key.parent().get().username}}'s question</h2>
-		
-		<!-- show question to be answered -->
 		<div class="displayText" id="display_user_question">
 			Question: <br>
-			<!--<textarea style="resize:none" name="displayQuestion" disabled>{{question.message}}</textarea>-->
+			
 			<p>
 				{{question.message}}
 			</p>
 		</div>
-		
-		<!-- area where text will be entered for QA -->
-		<div class="QAMessageArea" id="manualResponse">
-			<br>
+		<form class="QAForm" id="manual_response" action="/respond" method="post">
 			<table>
-			<form class="QAForm" id="manual_response" action="/respond" method="post">
-				<tr><th>Catagory</th><th> - or - </th><th>New Category</th></tr>
 				<tr>
+					<td><label for="cate_check_box" form="manual_response">Add Question to FAQ page</label><input id = "cate_check_box" type = "checkbox" name = "add_to_category" value = "1" /></td>
 					<td>
-						<!-- Category Area -->
 						<select id="catagory" form="manual_response" name="cname">
-							<option value="none"></option>
 							<option value="newCategory"> -- New Catagory -- </option>
 							{%if categories%}
 								{%for c in categories%}
@@ -36,23 +28,19 @@
 						</select>
 					</td>
 					<td>
-						<!-- Empty cell -->
-					</td>
-					<td>
 						<input type="text" name="new_cname" form = "manual_response"/>
 					</td>
 				</tr>
-				<tr><th>Response</th></tr>
 				<tr>
-					
+					<td>
 						<textarea style="resize:none" name="response" form="manual_response" rows="4" cols="50"></textarea><br>
 						<input type="submit" value="Submit Response"/>
-					
+					</td>
 				</tr>
-			</form>
-			</table>
+		</form>
+		</table>
 			
-		</div>
+		
 	</div>
 	{{banner}}
 </body>

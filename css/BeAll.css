@@ -141,13 +141,10 @@ input[type=submit]:hover, button[type=submit]:hover{
 }
 .QAForm{
 	
-	margin-bottom: 20px;
-	padding-top: 10px ;
+	
 }
 #manualResponse{
-	position: fixed;
-	margin-left: 60px;
-	margin-top: 200px;
+	
 }
 #catagory{
 	margin-bottom: 20px;

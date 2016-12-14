@@ -162,7 +162,9 @@ class ResponseHandler(BaseHandler):
 		accounttype = self.session.get('accounttype')
 		classname = self.session.get('class')
 		categoryname = self.request.get('cname')
+		
 		new_cname = self.request.get('new_cname')
+		
 		if self.validate_user(accountname, accounttype = ADMIN):
 			#user is logged in as accountname qand accounttype is ADMIN
 			user = User.query(User.username == accountname).fetch()[0]
@@ -170,7 +172,7 @@ class ResponseHandler(BaseHandler):
 			if len(classes) == 1:
 				classy = classes[0]
 				
-				if categoryname != 'none' and categoryname != '':
+				if self.request.get('add_to_category') == '1' and categoryname != '':
 				
 					if categoryname == 'newCategory' and new_cname != '':
 						categoryname = new_cname
