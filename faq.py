@@ -49,6 +49,8 @@ class FAQHandler(BaseHandler):
 		template_values = {'class': classes, 'accountname': username}
 		self.draw(user, template_values)
 
+		
+		
 	def post(self):
 		class_get = self.request.get_all('Class')
 		classname = class_get[0]

@@ -62,7 +62,10 @@ class QuestionHandler(BaseHandler):
 			if len(classes) == 1:
 				#class was found
 				user = User.query(User.username == accountname).fetch()[0]
-				self.draw(user)
+				data = {
+					'classname': classname,
+				}
+				self.draw(user, data)
 			else:
 				#class was not found or more than one class was found
 				#redirect to your homepage
@@ -143,6 +146,7 @@ class ResponseHandler(BaseHandler):
 					'question': question,
 					'accountname': accountname,
 					'categories': classy.categories,
+					'classname': classname,
 				}
 				
 				user = User.query(User.username == accountname).fetch()[0]
@@ -174,7 +178,7 @@ class ResponseHandler(BaseHandler):
 				
 				if self.request.get('add_to_category') == '1' and categoryname != '':
 				
-					if categoryname == 'newCategory' and new_cname != '':
+					if categoryname == 'Default' and new_cname != '':
 						categoryname = new_cname
 						
 					category = Category.query(Category.name == categoryname, ancestor=classy.key).fetch()
@@ -183,6 +187,7 @@ class ResponseHandler(BaseHandler):
 					elif len(category) == 0:
 						category = Category(name=categoryname, parent=classy.key)
 						category.put()
+						time.sleep(2)
 					else:
 						category = None
 					if category != None:

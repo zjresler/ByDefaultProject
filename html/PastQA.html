@@ -5,19 +5,24 @@
 </head>
 <body>
 	<div class = "bodyArea">
-		<h2>View Questions</h2>
+		<h2 class="pagehead">View Questions</h2>
 		
-
-		<table class="questionAnswerArea">
-			<tr></th><th>Question</th><th>Respondent</th><th>Response</th></tr>
-			{%for q in questions %}
-			<tr class="question">
-				<td>{{ q.message }}</td>{%if q.response!=None%}<td>{%if q.respondentUID!=None%}{{q.respondentUID.get().username}}{%endif%}</td><td>{{ q.response }}</td>{%endif%}	
-			</tr>
-			{%endfor%}
-			
-		</table>
-
+		{% if questions|length == 0 %}
+			<h3 class="pagehead">You have no questions.</h3>
+		{% else %}
+			<table id="pastqa_table" class="center">
+				<tr class="pastqa_cell" ><th class="pastqa_cell">Class</th><th class="pastqa_cell">Respondent</th><th class="pastqa_cell">Question</th><th class="pastqa_cell">Response</th></tr>
+				{%for q in questions %}
+				<tr style={% if loop.index0%2 == 0 %} "background-color: #4878FF;" {% else %} "background-color: lightblue;" {% endif %} class="pastqa_cell">
+					<td class="pastqa_cell">{{ q.classUID.get().classname }}</td>
+					<td class="pastqa_cell">{%if q.respondentUID!=None%}{{q.respondentUID.get().username}}{%endif%}</td>
+					<td class="pastqa_cell"><textarea rows="2" cols="40" class="displayText" id="question" disabled>{{ q.message }}</textarea></td>
+					<td class="pastqa_cell"><textarea rows="2" cols="40" class="displayText" id="response" disabled>{{ q.response }}</textarea></td>
+				</tr>
+				{%endfor%}
+				
+			</table>
+		{% endif %}
 	</div>
 	{{banner}}
 </body>

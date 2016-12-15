@@ -74,21 +74,21 @@ class PastQAHandler(BaseHandler):
 			classes = Class.query(Class.classname == class_get).fetch()
 			#classname = user.classlist
 			if accounttype == STUDENT:
-					
-				if len(classes) == 0:
-					que = user_key.get().questions
-				else:
-					que = Question.query(Question.classUID == classes[0].key, ancestor=user_key).fetch()
+				que = user_key.get().questions					
+#				if len(classes) == 0:
+#
+#				else:
+#					que = Question.query(Question.classUID == classes[0].key, ancestor=user_key).fetch()
 				template_values = {'title': 'Past Questions & Answers','accounttype': accounttype,'accountname' : accountname}
 				template_values['questions'] = que
 				template = JINJA_ENVIRONMENT.get_template('./html/PastQA.html')
 				self.draw(user, template_values)
 			elif accounttype == ADMIN:
-				
-				if len(classes) == 0:
-					que = user_key.get().questions
-				else:
-					que = Question.query(Question.respondentUID == user_key, Question.classUID == classes[0].key).fetch()	
+				que = user_key.get().questions
+#				if len(classes) == 0:
+#				
+#				else:
+#					que = Question.query(Question.respondentUID == user_key, Question.classUID == classes[0].key).fetch()	
 				template_values = {'title': 'Past Questions & Answers','accounttype': accounttype,'accountname' : accountname}
 				template_values['questions'] = que
 				template = JINJA_ENVIRONMENT.get_template('./html/PastQA.html')

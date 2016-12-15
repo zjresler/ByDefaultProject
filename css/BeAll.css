@@ -71,16 +71,7 @@ body{
 	width: 100%;
 }
 #askQuestionForm{
-	position: fixed;
-	border-bottom-style: ridge;
-	position: fixed;
-	left: 45%;
-	right: 45%;
-	top: 400px;
-	margin-left: -100px;
-	margin-top: -100px;
-	margin-bottom: 20px;
-	padding: 10px 20px;
+
 }
 .form_ANI{
 	width: 400px; 
@@ -187,7 +178,11 @@ h2.pagehead{
 	border-bottom: ridge;
 	margin-left: 60px;
 	*/
-	margin: 0 auto;
+	
+	margin-left: 0 auto;
+	margin-right: 0 auto;
+	margin-top: 0 auto;
+	margin-bottom: 30px;
 }
 #responseType{
 	position: fixed;
@@ -255,10 +250,6 @@ div.center{
 }
 table#faq_table{
 	
-	
-	
-	border: 1px solid rgb(0,120,255);
-	border-collapse: collapse;
 }
 #question, #response{
 	text-align: left;
@@ -268,20 +259,49 @@ table#faq_table{
 .off{
 	visibility: hidden;
 	width: 0px
-
 }
+
 th.center{
 	text-align: center;
 }
-tr.faq_cell, th.faq_cell, td.faq_cell{
-	text-align: center;
+th.faq_cell, td.faq_cell{
+/*	text-align: center;
 	border: 2px solid rgb(0,0,0);
 	border-collapse: collapse;
+*/
+	text-align: center;
+	border-right: 0px solid black;
+	padding: 0px;
 }
-td.faq_cell{
-	height: 100%
+th.faq_cell{
+	border-bottom: 2px solid black;
+	border-left: 0px solid black;
+	border-right: 0px solid black;
 }
 input:disabled {
 	color: black;
 
+}
+table {
+	border-collapse: collapse;
+}
+table.pastqa_table{
+	
+
+}
+th.pastqa_cell, td.pastqa_cell{
+	text-align: center;
+	border-right: 0px solid black;
+	padding: 0px;
+}
+th.pastqa_cell{
+	border-bottom: 2px solid black;
+	border-left: 0px solid black;
+	border-right: 0px solid black;
+}
+textarea#question.displayText, textarea#response.displayText{
+	width: 20em;
+	height: 5em;
+	margin-left: 10px;
+	margin-right: 10px;
 }

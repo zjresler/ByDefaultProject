@@ -76,6 +76,6 @@ class BaseHandler(BannerStandard, webapp2.RequestHandler):
 				html_out = html_out + BANNER_STHOME
 			html_out = html_out + BANNER_PASTQA
 		else:
-			html_out = html_out + BANNER_LOGIN
+			html_out = html_out + BANNER_LOGIN + BANNER_VIEW_FAQ
 			
 		return ( html_out+BANNER_END )

@@ -22,7 +22,7 @@
 					<td>
 						<label for="category">Select a category for FAQ</label>
 						<select id="category" form="manual_response" name="cname">
-							<option value="newCategory"> -- New Catagory -- </option>
+							<option value="Default"> -- New Catagory -- </option>
 							{%if categories%}
 								{%for c in categories%}
 									<option value="{{c.name}}">{{c.name}}</option>

@@ -5,20 +5,24 @@
 <body>
 	<div class="bodyArea">
 		<h2 class="pagehead">FAQ for {{classname}}</h2>
-		<table id="faq_table" class="center">
-			<tr class="faq_cell">
-				<th class="faq_cell">Category</th>
-				<th class="faq_cell">Question</th>
-				<th class="faq_cell">Answer</th>
-			</tr>
-			{% for c in class|sort(attribute = 'category')%}
+		{% if class|sort(attribute = 'category')|length == 0 %}
+			<h3 class="pagehead">No FAQ entries found.</h3>
+		{% else %}
+			<table id="faq_table" class="center">
 				<tr class="faq_cell">
-					<td class="faq_cell"><div class="center">{{c.category.get().name}}</div></td>
-					<td class="faq_cell"><div class="center"><textarea rows="6" cols="40" class="displayText" id="question" disabled>{{c.message}}</textarea></div></td>
-					<td class="faq_cell"><div class="center"><textarea rows="6" cols="40" class="displayText" id="response" disabled>{{c.response}}</textarea></div></td>
+					<th class="faq_cell">Category</th>
+					<th class="faq_cell">Question</th>
+					<th class="faq_cell">Answer</th>
 				</tr>
-			{% endfor %}
-		</table>
+				{% for c in class|sort(attribute = 'category')%}
+					<tr style={%if loop.index0%2 == 0 %}"background-color:#4878FF;" {% else %} "background-color: lightblue;" {% endif %} class="faq_cell">
+						<td class="faq_cell"><div class="center">{{c.category.get().name}}</div></td>
+						<td class="faq_cell"><div class="center"><textarea rows="6" cols="40" class="displayText" id="question" disabled>{{c.message}}</textarea></div></td>
+						<td class="faq_cell"><div class="center"><textarea rows="6" cols="40" class="displayText" id="response" disabled>{{c.response}}</textarea></div></td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% endif %}
 	</div>
 	{{banner}}
 </body>
