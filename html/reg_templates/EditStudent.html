@@ -1,54 +1,56 @@
-<!DOCTYPE html>
 <html>
 <head>
+<link type="text/css" rel="stylesheet" href="../css/BeAll.css">
 <title>EditStudentInfo</title>
 </head>
 {% if userType == 'student' %}
 <h1><strong>Edit Student Info</strong></h1>
-<form action='editPersonalInfo'
-	<div id="container">  
-		<form action="/homepage" method="POST">
-		<fieldset>
-			<legend>Personal User Information</legend>
-			<label for="username">Username:</label><br>
-			{{ userName }}
-			<label for="firstname">First Name:</label><br>
-			<input type="submit" id="edit" name="First Name" value='{{ firstName }}'/>
-			<label for="lastname">Last Name:</label><br>
-			<input type="submit" id="edit" name="Last Name" value='{{ lastName }}'>
-			<label for="password">Password:</label><br>
-			<input type="submit" id="edit" name="Password" value='Password'>
-		</fieldset>
+<body>
+	<div class="bodyArea">
+		<form action='editPersonalInfo'
+			<div id="container">  
+				<form action="/homepage" method="POST">
+				<fieldset>
+					<legend>Personal User Information</legend>
+					<label for="username">Username:</label><br>
+					{{ userName }}
+					<label for="firstname">First Name:</label><br>
+					<input type="submit" id="edit" name="First Name" value='{{ firstName }}'/>
+					<label for="lastname">Last Name:</label><br>
+					<input type="submit" id="edit" name="Last Name" value='{{ lastName }}'>
+					<label for="password">Password:</label><br>
+					<input type="submit" id="edit" name="Password" value='Password'>
+				</fieldset>
+				</form>
+			</div>
+		<form action='/registrationhomepage'>
+			<input type='submit' value='Home, Account Administration'>
+		</form>
+		{% endif %}
+
+		{% if userType == 'instructor' %}
+		<h1><strong>Edit Student Info</strong></h1>
+		<h2>Instructor-Level Authority</h2>
+		<br>
+		<h3>Select Class:</h3>
+			{% for class in classes %}
+				<input type="submit" value="{{ class }}">
+			{% endfor %>}
+		{% endif %}
+
+		{% if userType == 'admin' %}
+			<h1><strong>Edit Student Info</strong></h1>
+			<h2>Admin-Level Authority</h2>
+			<br>
+			<h3>Select student to edit:</h3>
+
+			{% for student in students %}
+				<input type="submit" value={{ student }}>
+			{% endfor %}
+
+		{% endif %}
 		</form>
 	</div>
-<form action='/registrationhomepage'>
-	<input type='submit' value='Home, Account Administration'>
-</form>
-{% endif %}
-
-{% if userType == 'instructor' %}
-<h1><strong>Edit Student Info</strong></h1>
-<h2>Instructor-Level Authority</h2>
-<br>
-<h3>Select Class:</h3>
-	{% for class in classes %}
-		<input type="submit" value="{{ class }}">
-	{% endfor %>}
-{% endif %}
-
-{% if userType == 'admin' %}
-	<h1><strong>Edit Student Info</strong></h1>
-	<h2>Admin-Level Authority</h2>
-	<br>
-	<h3>Select student to edit:</h3>
-
-	{% for student in students %}
-		<input type="submit" value={{ student }}>
-	{% endfor %}
-
-{% endif %}
-</form>
+	{{banner}}
+</body>
 </html>
-
-
-    

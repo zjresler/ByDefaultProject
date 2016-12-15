@@ -71,11 +71,25 @@ class BaseHandler(BannerStandard, webapp2.RequestHandler):
 			#html_out = html_out + "Hello, "+user.username+"..."
 			html_out = html_out + BANNER_LOGOUT + BANNER_VIEW_FAQ
 			if user.accounttype == ADMIN:
-				html_out = html_out + BANNER_INHOME
+				html_out = html_out + BANNER_INHOME + BANNER_PASTQA
 			elif user.accounttype == STUDENT:
-				html_out = html_out + BANNER_STHOME
-			html_out = html_out + BANNER_PASTQA
+				html_out = html_out + BANNER_STHOME + BANNER_PASTQA
+			elif user.accounttype == SADMIN:
+				html_out = html_out + BANNER_AHOME
 		else:
 			html_out = html_out + BANNER_LOGIN + BANNER_VIEW_FAQ
 			
 		return ( html_out+BANNER_END )
+class DefaultDraw(BaseHandler):
+	template_path_get = ''
+	template_path_post= ''
+	def draw(self, user, template_values={}):
+		template_values['banner'] = self.build_banner(user)
+		if self.request.method == 'GET':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_get)
+			self.response.write(template.render(template_values))
+		elif self.request.method == 'POST':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_post)
+			self.response.write(template.render(template_values))
+		else:
+			exit('Write method called with invalid method.')

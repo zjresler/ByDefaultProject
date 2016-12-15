@@ -4,57 +4,59 @@
 </head>
 
 <body>
-<h1><strong>MAIN PAGE - Account Administration</strong></h1>
+	<div class="bodyArea">
+		<h1><strong>MAIN PAGE - Account Administration</strong></h1>
 
-{% if user.accounttype == 'admin' or user.accounttype == 'instructor' %}
-<h2> Add/Edit Users </h2>
-{% endif %}
-<h3> Welcome, {{ user.firstname + ' ' + user.lastname }}, account type: {{ user.accounttype }}</h3>
-<br>
-<div class="Administrative-Main-Menu">
-{% if user.accounttype == 'admin' %}
-<form action='/addinstructor'>
-    <input id="addInstructor" type="submit" name="addInstructor" value="SELECT"><strong> Add New Instructor </strong>
-    <br>
-</form>
+		{% if user.accounttype == 'admin' or user.accounttype == 'instructor' %}
+		<h2> Add/Edit Users </h2>
+		{% endif %}
+		<h3> Welcome, {{ user.firstname + ' ' + user.lastname }}, account type: {{ user.accounttype }}</h3>
+		<br>
+		<div class="Administrative-Main-Menu">
+		{% if user.accounttype == 'admin' %}
+		<form action='/addinstructor'>
+			<input id="addInstructor" type="submit" name="addInstructor" value="SELECT"><strong> Add New Instructor </strong>
+			<br>
+		</form>
 
-<form action='/editinstructor'>
-    <input id="editInstructor" type="submit" name="editInstructor" value="SELECT"><strong> Edit Instructor User Information </strong>
-    <br>
-</form>
-{% endif %}
+		<form action='/editinstructor'>
+			<input id="editInstructor" type="submit" name="editInstructor" value="SELECT"><strong> Edit Instructor User Information </strong>
+			<br>
+		</form>
+		{% endif %}
 
-{% if user.accounttype == 'admin' or user.accounttype == 'instructor' %}
-<form action='/addstudent'>
-    <input type="submit" name="addStudent" value="SELECT"><strong> Add New Student </strong>
-    <br>
-</form>
+		{% if user.accounttype == 'admin' or user.accounttype == 'instructor' %}
+		<form action='/addstudent'>
+			<input type="submit" name="addStudent" value="SELECT"><strong> Add New Student </strong>
+			<br>
+		</form>
 
-<form action='/editreviewstudents'>
-    <input id="studentEditReview" type="submit" name="toStudentEditReview" value="SELECT"><strong> Edit/Review Students </strong>
-    <br />
-</form>
-{% endif %}
+		<form action='/editreviewstudents'>
+			<input id="studentEditReview" type="submit" name="toStudentEditReview" value="SELECT"><strong> Edit/Review Students </strong>
+			<br />
+		</form>
+		{% endif %}
 
-{% if user.accounttype == 'student' or user.accounttype == 'instructor' %}
-<form action='/editpersonalinformation'>
-    <input type="submit" value="SELECT"><strong> Edit Personal Information </strong>
-    <br>
-</form>
-{% endif %}
+		{% if user.accounttype == 'student' or user.accounttype == 'instructor' %}
+		<form action='/editpersonalinformation'>
+			<input type="submit" value="SELECT"><strong> Edit Personal Information </strong>
+			<br>
+		</form>
+		{% endif %}
 
-{% if user.accounttype == "instructor" %}
-<form action='/userhomepage'>
-    <input id="returnToHome" type="submit" value="SELECT"><strong> Return to the Instructor Home Page </strong>
-    <br>
-</form>
-{% elif user.accounttype == "student" %}
-<form action='/userhomepage'>
-    <input id="returnToHome" type="submit" value="SELECT"><strong> Return to the Student Home Page </strong>
-    <br>
-</form>
-{% endif %}
+		{% if user.accounttype == "instructor" %}
+		<form action='/userhomepage'>
+			<input id="returnToHome" type="submit" value="SELECT"><strong> Return to the Instructor Home Page </strong>
+			<br>
+		</form>
+		{% elif user.accounttype == "student" %}
+		<form action='/userhomepage'>
+			<input id="returnToHome" type="submit" value="SELECT"><strong> Return to the Student Home Page </strong>
+			<br>
+		</form>
+		{% endif %}
 
-</div>
-
-
+		</div>
+	</div>
+	{{banner}}
+</body>

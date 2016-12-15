@@ -51,5 +51,8 @@ BANNER_STHOME ="""
 BANNER_INHOME = """
 	<td><form action="/instructorhomepage" method="GET"><input type="submit" value="Home"></form></td>
 """
+BANNER_AHOME = """
+	<td><form action="/registrationhomepage" method="GET"><input type="submit" value="Home"></form></td>
+"""
 BANNER_END = """</tr></table></div>
 """

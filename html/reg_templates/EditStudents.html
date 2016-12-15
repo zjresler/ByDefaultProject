@@ -1,43 +1,44 @@
-<!DOCTYPE html>
 <html>
 <head>
+<link type="text/css" rel="stylesheet" href="../css/BeAll.css">
 <title>Edit Students</title>
-<strong>Edit Students</strong>
+
 </head>
 
 <body>
-<h3>Select Student to Edit</h3>
+	<div class="bodyArea">
+		<h3>Select Student to Edit</h3>
 
-<form action='editstudent' method='POST'>
+		<form action='editstudent' method='POST'>
 
-<select name="studentSelected">
-	{% for student in students %}
-	<option value="{{students}}">{{student.username}}</option> 
-  	{% endfor %}
-</select>
+		<select name="studentSelected">
+			{% for student in students %}
+			<option value="{{students}}">{{student.username}}</option> 
+			{% endfor %}
+		</select>
 
-<input type='submit' value='submit'>
+		<input type='submit' value='submit'>
 
-</form>
-
-{% if SELECTION %}
-<form action='editPersonalInfo'
-	<div id="container">  
-		<form action="/homepage" method="POST">
-		<fieldset>
-			<legend>Personal User Information</legend>
-			<label for="username">Username:</label><br>
-			{{ userName }}
-			<label for="firstname">First Name:</label><br>
-			<input type="submit" id="edit" name="FirstName" value='{{ firstName }}'/>
-			<label for="lastname">Last Name:</label><br>
-			<input type="submit" id="edit" name="LastName" value='{{ lastName }}'>
-			<label for="password">Password:</label><br>
-			<input type="submit" id="edit" name="Password" value='Password'>
-		</fieldset>
 		</form>
-{% endif %}
 
+		{% if SELECTION %}
+		<form action='editPersonalInfo'
+			<div id="container">  
+				<form action="/homepage" method="POST">
+				<fieldset>
+					<legend>Personal User Information</legend>
+					<label for="username">Username:</label><br>
+					{{ userName }}
+					<label for="firstname">First Name:</label><br>
+					<input type="submit" id="edit" name="FirstName" value='{{ firstName }}'/>
+					<label for="lastname">Last Name:</label><br>
+					<input type="submit" id="edit" name="LastName" value='{{ lastName }}'>
+					<label for="password">Password:</label><br>
+					<input type="submit" id="edit" name="Password" value='Password'>
+				</fieldset>
+				</form>
+		{% endif %}
+	</div>
+	{{banner}}
 </body>
 </html>
-
