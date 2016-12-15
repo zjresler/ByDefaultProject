@@ -4,23 +4,20 @@
 </head>
 <body>
 	<div class="bodyArea">
-		<table style="width:90%">
-		<tr>
-
-		<th class = "notBanner"> Question </th>
-		<th class = "notBanner"> Answer </th>
-		<th class = "notBanner"> Category </th>
-		</tr>
-		<tr>
-			<th class = "notBanner">{{classname}}</th>	
-		{% for c in class|sort(attribute = 'category')%}
-				<tr>
-					<td class = "notBanner"><textarea class="messageArea" disabled name = "dummyarea">{{c.message}}</textarea></td>
-					<td class = "notBanner">{{c.response}}</td>
-					<td class = "notBanner">{{c.category.get().name}}</td>
+		<h2 class="pagehead">FAQ for {{classname}}</h2>
+		<table id="faq_table" class="center">
+			<tr class="faq_cell">
+				<th class="faq_cell">Category</th>
+				<th class="faq_cell">Question</th>
+				<th class="faq_cell">Answer</th>
+			</tr>
+			{% for c in class|sort(attribute = 'category')%}
+				<tr class="faq_cell">
+					<td class="faq_cell"><div class="center">{{c.category.get().name}}</div></td>
+					<td class="faq_cell"><div class="center"><textarea rows="6" cols="40" class="displayText" id="question" disabled>{{c.message}}</textarea></div></td>
+					<td class="faq_cell"><div class="center"><textarea rows="6" cols="40" class="displayText" id="response" disabled>{{c.response}}</textarea></div></td>
 				</tr>
-		{% endfor %}
-		  </tr>
+			{% endfor %}
 		</table>
 	</div>
 	{{banner}}

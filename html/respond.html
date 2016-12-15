@@ -5,20 +5,23 @@
 </head>
 <body>
 	<div class="bodyArea">
-		<h2 id="Resp">Respond to {{question.key.parent().get().username}}'s question</h2>
-		<div class="displayText" id="display_user_question">
-			Question: <br>
-			
-			<p>
-				{{question.message}}
-			</p>
+		<h2 class="pagehead">Respond to {{question.key.parent().get().username}}'s question</h2>
+		<div  id="display_user_question">
+			<label id="dummylabel"for="dummy">Question:</label>
+			<input class="displayText" id="dummy" disabled type = "text" value = "{{question.message}}"/>
 		</div>
 		<form class="QAForm" id="manual_response" action="/respond" method="post">
-			<table>
+			<table class="center">
 				<tr>
-					<td><label for="cate_check_box" form="manual_response">Add Question to FAQ page</label><input id = "cate_check_box" type = "checkbox" name = "add_to_category" value = "1" /></td>
 					<td>
-						<select id="catagory" form="manual_response" name="cname">
+						<label for="cate_check_box" form="manual_response">Add to FAQ</label>
+						<input id = "cate_check_box" type = "checkbox" name = "add_to_category" value = "1" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="category">Select a category for FAQ</label>
+						<select id="category" form="manual_response" name="cname">
 							<option value="newCategory"> -- New Catagory -- </option>
 							{%if categories%}
 								{%for c in categories%}
@@ -27,19 +30,27 @@
 							{%endif%}
 						</select>
 					</td>
+				</tr>
+				<tr>				
 					<td>
-						<input type="text" name="new_cname" form = "manual_response"/>
+						<label for="new_cname_textbox">New Category Name:</label>
+						<input id="new_cname_textbox" type="text" name="new_cname" form = "manual_response"/>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<textarea style="resize:none" name="response" form="manual_response" rows="4" cols="50"></textarea><br>
+						<textarea style="resize:none" name="response" form="manual_response" rows="4" cols="50"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>
 						<input type="submit" value="Submit Response"/>
 					</td>
 				</tr>
+			</table>
 		</form>
-		</table>
-			
+		
+		
 		
 	</div>
 	{{banner}}
