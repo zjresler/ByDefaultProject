@@ -54,6 +54,8 @@ body{
 #login{
 	margin-bottom: 20px;
 	padding: 10px 20px;
+	width: 200px;
+	height: 40px;
 }
 #inReg{
 	margin-bottom: 20px;
@@ -114,10 +116,12 @@ input[type=submit], button[type=submit]{
 input[type=submit]:hover, button[type=submit]:hover{
     background-color: rgb(50,150,255);
 }
+input[type=text]{
+	font-family: rockwell;
+}
 
-
-.questionAnswerArea{
 	
+.questionAnswerArea{
 	margin: 0 auto;
 	padding-left: 10px;
 	width: 100%;
@@ -143,11 +147,21 @@ input[type=submit]:hover, button[type=submit]:hover{
 	
 	
 }
+#dummy{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	height: 100px;
+}
+#dummylabel{
+	text-align: left;
+}
+
 #manualResponse{
 	
 }
-#catagory{
-	margin-bottom: 20px;
+#category{
+	width: 100%;
+	text-align: center;
 }
 #FAQResponse{
 	position: fixed;
@@ -158,16 +172,22 @@ input[type=submit]:hover, button[type=submit]:hover{
 	margin-top: 20px;
 }
 .displayText{
-	position: fixed;
-	margin-bottom: 20px;
-	padding: 10px 20px;
-	margin-left: 75px;
-	margin-top: 75px;
+	background: transparent;
+	border: none;
+	text-align: center;
+	font-family: rockwell;
+	font-size: 12pt;
+	resize: none;
 }
-#Resp{
-	position: fixed;
+textarea.displayText:disabled{
+	color: black;
+}
+h2.pagehead{
+	/*position: fixed;
 	border-bottom: ridge;
 	margin-left: 60px;
+	*/
+	margin: 0 auto;
 }
 #responseType{
 	position: fixed;
@@ -207,6 +227,12 @@ input[type=submit]:hover, button[type=submit]:hover{
 table.center{
 	margin: 0 auto;
 }
+div.center{
+	margin-left: auto;
+	margin-right: auto;
+	color: black;
+	text-align:center;
+}
 
 #bannerTable{
 	margin: 0 auto;
@@ -216,11 +242,46 @@ table.center{
 	height: 100%;
 }
 .console{
-	visibility: hidden;
+	/*visibility: hidden;*/
 	position: fixed;
 	bottom: 0px;
 	left: 0px;
 }
 .consoleTable{
 	background-color: white;
+}
+#new_cname_textbox{
+	width: 100%;
+}
+table#faq_table{
+	
+	
+	
+	border: 1px solid rgb(0,120,255);
+	border-collapse: collapse;
+}
+#question, #response{
+	text-align: left;
+	margin: 0 auto;
+	font-size: 12pt
+}
+.off{
+	visibility: hidden;
+	width: 0px
+
+}
+th.center{
+	text-align: center;
+}
+tr.faq_cell, th.faq_cell, td.faq_cell{
+	text-align: center;
+	border: 2px solid rgb(0,0,0);
+	border-collapse: collapse;
+}
+td.faq_cell{
+	height: 100%
+}
+input:disabled {
+	color: black;
+
 }
