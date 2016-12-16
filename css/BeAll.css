@@ -264,15 +264,6 @@ table#faq_table{
 th.center{
 	text-align: center;
 }
-th.faq_cell, td.faq_cell{
-/*	text-align: center;
-	border: 2px solid rgb(0,0,0);
-	border-collapse: collapse;
-*/
-	text-align: center;
-	border-right: 0px solid black;
-	padding: 0px;
-}
 th.faq_cell{
 	border-bottom: 2px solid black;
 	border-left: 0px solid black;
@@ -289,10 +280,16 @@ table.pastqa_table{
 	
 
 }
-th.pastqa_cell, td.pastqa_cell{
+th.pastqa_cell, td.pastqa_cell,th.faq_cell, td.faq_cell{
 	text-align: center;
 	border-right: 0px solid black;
-	padding: 0px;
+	word-wrap: break-word;
+	max-width: 450px;
+	padding-left: 35px;
+	padding-right: 35px;
+	padding-top: 20px;
+	padding-bottom: 15px;
+	
 }
 th.pastqa_cell{
 	border-bottom: 2px solid black;
