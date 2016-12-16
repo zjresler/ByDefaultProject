@@ -15,10 +15,10 @@
 					<th class="faq_cell">Answer</th>
 				</tr>
 				{% for c in class|sort(attribute = 'category')%}
-					<tr style={%if loop.index0%2 == 0 %}"background-color:#4878FF;" {% else %} "background-color: lightblue;" {% endif %} class="faq_cell">
+					<tr style={%if loop.index0%2 == 0 %}"background-color: rgb(0,120,255);" {% else %} "background-color: lightblue;" {% endif %} class="faq_cell">
 						<td class="faq_cell"><div class="center">{{c.category.get().name}}</div></td>
-						<td class="faq_cell"><div class="center"><textarea rows="6" cols="40" class="displayText" id="question" disabled>{{c.message}}</textarea></div></td>
-						<td class="faq_cell"><div class="center"><textarea rows="6" cols="40" class="displayText" id="response" disabled>{{c.response}}</textarea></div></td>
+						<td class="faq_cell"><div class="center">{{c.message}}</div></td>
+						<td class="faq_cell"><div class="center">{{c.response}}</div></td>
 					</tr>
 				{% endfor %}
 			</table>
