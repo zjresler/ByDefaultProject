@@ -6,20 +6,20 @@
 <body>
 	<div class="bodyArea">
 		<h2 class="pagehead">Respond to {{question.key.parent().get().username}}'s question</h2>
-		<div  id="display_user_question">
-			<label id="dummylabel"for="dummy">Question:</label>
-			<input class="displayText" id="dummy" disabled type = "text" value = "{{question.message}}"/>
-		</div>
+		<table id="pastqa_table" class="center">
+			<tr class="pastqa_cell" ><td class="pastqa_cell">{{question.message}}</td>
+			</tr>
+		</table>
 		<form class="QAForm" id="manual_response" action="/respond" method="post">
 			<table class="center">
-				<tr>
-					<td>
+				<tr class="respond_check">
+					<td class="respond_check">
 						<label for="cate_check_box" form="manual_response">Add to FAQ</label>
 						<input id = "cate_check_box" type = "checkbox" name = "add_to_category" value = "1" />
 					</td>
 				</tr>
-				<tr>
-					<td>
+				<tr class="respond_check">
+					<td class="respond_check">
 						<label for="category">Select a category for FAQ</label>
 						<select id="category" form="manual_response" name="cname">
 							<option value="Default"> -- New Catagory -- </option>
@@ -29,21 +29,23 @@
 								{%endfor%}
 							{%endif%}
 						</select>
-					</td>
-				</tr>
-				<tr>				
-					<td>
+					</td><br>
+				</tr><br>
+				<tr class="respond_check">				
+					<td class="respond_check">
 						<label for="new_cname_textbox">New Category Name:</label>
 						<input id="new_cname_textbox" type="text" name="new_cname" form = "manual_response"/>
 					</td>
 				</tr>
-				<tr>
-					<td>
-						<textarea style="resize:none" name="response" form="manual_response" rows="4" cols="50"></textarea>
+				<tr class="respond_check">
+					<td class="respond_check">
+						<label for="well">Resonse:</label><br>
+						<textarea id = "well" style="resize:none" name="response" form="manual_response" rows="10" cols="70"></textarea>
 					</td>
 				</tr>
 				<tr>
 					<td>
+						
 						<input type="submit" value="Submit Response"/>
 					</td>
 				</tr>
