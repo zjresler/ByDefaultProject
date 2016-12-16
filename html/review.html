@@ -4,34 +4,28 @@
 	<link rel="stylesheet" type="text/css" href="/css/BeAll.css">
 </head>
 <body>
-	
-	<div class="bodyArea">
-		<h2 id="FAQ">Review Open Questions</h2>
-		<table class="questionAnswerArea">
-			<tr class="question">
-				{%if instructor%}
-					<th>Username</th>
-				{%endif%}
-				<th>Question</th><th>Response</th></tr>
-			
-			{%for q in questions%}
-				<tr class="question">
-					{%if instructor%}
-						<td>{{q.key.parent().get().username}}</td>
-					{%endif%}
-					<td>{{q.message}}</td><td>{{q.response}}</td>
-					
-						
-							<td><form action='/respond' method = 'get'>
+	<div class = "bodyArea">
+		<h2 class="pagehead">Review Open Questions</h2>
+		
+		{% if questions|length == 0 %}
+			<h3 class="pagehead">You have no questions.</h3>
+		{% else %}
+			<table id="pastqa_table" class="center">
+				<tr class="pastqa_cell" ><th class="pastqa_cell">Student</th><th class="pastqa_cell">Question</th><th class="pastqa_cell"></th></tr>
+				{%for q in questions %}
+				<tr style={% if loop.index0%2 == 0 %} "background-color: rgb(0,120,255);" {% else %} "background-color: lightblue;" {% endif %} class="pastqa_cell">
+					<td class="pastqa_cell">{{q.key.parent().get().username}}</td>
+					<td class="pastqa_cell">{{q.message}}</td>
+					<td class="pastqa_cell"><form action='/respond' method = 'get'>
 								<input type = 'hidden' name = 'questionkey' value='{{q.key.urlsafe()}}'/>
 								<input type ='submit' value = 'Respond'/>
 							</form></td>
-				
-				
 				</tr>
-			{%endfor%}
-		</table>
-
+				
+				{%endfor%}
+				
+			</table>
+		{% endif %}
 	</div>
 	{{banner}}
 </body>
