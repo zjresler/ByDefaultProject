@@ -75,9 +75,10 @@ class BaseHandler(BannerStandard, webapp2.RequestHandler):
 				html_out = html_out + BANNER_STHOME + BANNER_PASTQA
 			elif user.accounttype == SADMIN:
 				html_out = html_out + BANNER_AHOME
+			html_out = html_out  + BANNER_VIEW_FAQ + BANNER_LOGOUT
 		else:
-			html_out = html_out + BANNER_LOGIN + BANNER_VIEW_FAQ
-		html_out = html_out  + BANNER_VIEW_FAQ + BANNER_LOGOUT
+			html_out = html_out + BANNER_VIEW_FAQ + BANNER_LOGIN
+			
 		return ( html_out+BANNER_END )
 	
 class DefaultDraw(BaseHandler):
