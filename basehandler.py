@@ -68,8 +68,7 @@ class BaseHandler(BannerStandard, webapp2.RequestHandler):
 	def build_banner(self, user):
 		html_out = BANNER_DEFAULT_0 
 		if user != None:
-			#html_out = html_out + "Hello, "+user.username+"..."
-			html_out = html_out + BANNER_LOGOUT + BANNER_VIEW_FAQ
+			#html_out = html_out + "Hello, "+user.username+"..."			
 			if user.accounttype == ADMIN:
 				html_out = html_out + BANNER_INHOME + BANNER_PASTQA
 			elif user.accounttype == STUDENT:
@@ -78,8 +77,9 @@ class BaseHandler(BannerStandard, webapp2.RequestHandler):
 				html_out = html_out + BANNER_AHOME
 		else:
 			html_out = html_out + BANNER_LOGIN + BANNER_VIEW_FAQ
-			
+		html_out = html_out  + BANNER_VIEW_FAQ + BANNER_LOGOUT
 		return ( html_out+BANNER_END )
+	
 class DefaultDraw(BaseHandler):
 	template_path_get = ''
 	template_path_post= ''
