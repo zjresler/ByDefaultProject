@@ -302,3 +302,7 @@ textarea#question.displayText, textarea#response.displayText{
 	margin-left: 10px;
 	margin-right: 10px;
 }
+td.respond_check{
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
