@@ -132,6 +132,7 @@ class AddStudentHandler(DefaultDraw):
 			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
 	def post(self):
 		accountname = self.session.get('account')
+
 		if self.validate_user(accountname, SADMIN):	
 			classFromForm = None
 			if len(Class.query(Class.classname == self.request.get('class')).fetch()) == 0:
@@ -161,7 +162,7 @@ class AddStudentHandler(DefaultDraw):
 					sender = 'Question App Support <admin@{}.appspotmail.com>'.format(app_identity.get_application_id())
 					to = address
 					subject = 'Activation Your Account'
-					body = 'Please click the following link to create your account<br>  {}.appspot.com/register?username={}&classkey={}'.format(app_identity.get_application_id(),address.split('@')[0],classFromForm.key.urlsafe())
+					body = 'Please click the following link to create your account  http://{}.appspot.com/register?username={}&classkey={}'.format(app_identity.get_application_id(),address.split('@')[0],classFromForm.key.urlsafe())
 					email = Register().make_mail_message(sender,to,subject,body)
 					if email != None:
 						email.send()
