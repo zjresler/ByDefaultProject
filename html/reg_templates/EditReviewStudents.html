@@ -20,10 +20,13 @@ caption {
 		{% if nextAction == 'show classlist' %}
 			<form action='/editreviewstudents' method="POST">
 				<p><strong>Choose Class To Review</strong></p>
+					
+				<table class="center">
+					<tr class="pastqa_cell"><td><input type="radio" name="selection" value="all">All Users</input></td></tr>
 				{% for class in classes %}
-					<input type = "radio" name='selection' value='{{class.classname}}'>{{class.classname}}</input>
-					<br>
+					<tr class="pastqa_cell"><td><input type = "radio" name='selection' value='{{class.classname}}'>{{class.classname}}</input></td></tr>
 				{% endfor %}
+				</table>
 				<input type='submit' value='SUBMIT'/>
 			</form>
 		{% endif %}
@@ -32,7 +35,7 @@ caption {
 			<form action='/displaystudents' method='POST'>
 				<p><strong>Class: {{class.classname}}</strong></p>
 				<br>
-				<table>
+				<table class="center">
 				<caption><strong>Choose Class Member to Edit</strong></caption>
 				<tr>
 					<th>Selection</th>
@@ -57,7 +60,8 @@ caption {
 
 		{% if nextAction == 'show student data' %}
 		<form action='/savedata' method='POST'>
-		<table>
+		<input type="hidden" name="user_key" value="{{ userChosen.key.urlsafe() }}"/>
+		<table class="center">
 		  <caption>Personal Data for user: <strong>{{userChosen.email}}</strong></caption>
 		  <tr>
 			<th>Account Type</th>
@@ -77,14 +81,6 @@ caption {
 			<input type='submit' value="SUBMIT CHANGES">
 		</form>
 		{% endif %}
-
-
-
-
-
-		<form action='/registrationhomepage'>
-			<input type='submit' value='Home, Account Administration'>
-		</form>
 	</div>
 	{{banner}}
 </body>

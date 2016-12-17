@@ -5,31 +5,24 @@
 
 <body>
 	<div class="bodyArea">
-		<h1><strong>Account Administration</strong></h1>
-
-		{% if user.accounttype == 'admin' or user.accounttype == 'instructor' %}
-		<h2> Add/Edit Users </h2>
-		{% endif %}
-		<h3> Welcome, {{ user.firstname + ' ' + user.lastname }}, account type: {{ user.accounttype }}</h3>
-		<br>
-		<div id="bodyArea">
+		<h1 class="pagehead"><strong>Account Administration</strong></h1>
+		<h2 class="pagehead"> Add/Edit Users </h2>
 		<table id="pastqa_table" class="center">
 			{% if user.accounttype == 'admin' %}
 			<tr class="pastqa_cell" >
 			<tr class="pastqa_cell" >	<td class="pastqa_cell"><form action='/addinstructor'><input id="addInstructor" type="submit" name="addInstructor" value="Add New Instructor"><br></form></td></tr>
-			<tr class="pastqa_cell" >	<td class="pastqa_cell"><form action='/editinstructor'><input id="editInstructor" type="submit" name="editInstructor" value="Edit Instructor User Information "><br></form> </td></tr>
 			{% endif %}
 			{% if user.accounttype == 'admin' or user.accounttype == 'instructor' %}
 			<tr class="pastqa_cell" >	<td class="pastqa_cell"><form action='/addstudent'><input type="submit" name="addStudent" value="Add New Student"><br></form> </td></tr>
-			<tr class="pastqa_cell" >	<td class="pastqa_cell"><form action='/editreviewstudents'><input id="studentEditReview" type="submit" name="toStudentEditReview" value="Edit/Review Students"><br /></form></td></tr>
+			<tr class="pastqa_cell" >	<td class="pastqa_cell"><form action='/editreviewstudents'><input id="studentEditReview" type="submit" name="toStudentEditReview" value="Edit/Review Users"><br /></form></td></tr>
 			{% endif %}
 			{% if user.accounttype == 'student' or user.accounttype == 'instructor' %}
 			<tr class="pastqa_cell" >	<td class="pastqa_cell"><form action='/editpersonalinformation'><input type="submit" value="Edit Personal Information"><br></form></td></tr>
 			{% endif %}
 			{% if user.accounttype == "instructor" %}
-			<tr class="pastqa_cell" >	<td class="pastqa_cell"><form action='/userhomepage'><input id="returnToHome" type="submit" value="Return to the Instructor Home Page"><br></form></td><?
+			<tr class="pastqa_cell" >	<td class="pastqa_cell"><form action='/userhomepage'><input id="returnToHome" type="submit" value="Return to the Instructor Home Page"><br></form></td>
 			{% elif user.accounttype == "student" %}
-			<tr class="pastqa_cell" >	<td class="pastqa_cell"><form action='/userhomepage'><input id="returnToHome" type="submit" value="Return to the Student Home Page"><br></form></td><?
+			<tr class="pastqa_cell" >	<td class="pastqa_cell"><form action='/userhomepage'><input id="returnToHome" type="submit" value="Return to the Student Home Page"><br></form></td>
 			{% endif %}
 		</tr>
 		</table>

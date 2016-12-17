@@ -176,7 +176,7 @@ class AddStudentHandler(DefaultDraw):
 					else:
 						student.classlist.append(classFromForm)
 						student.put()
-			self.success_redirect('DSUBMIT_SUCCESS', '/registerhomepage')
+			self.success_redirect('DSUBMIT_SUCCESS', '/registrationhomepage')
 		else:
 			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
 		
@@ -254,6 +254,7 @@ class EditReviewStudentsHandler(DefaultDraw):
 		if self.validate_user(accountname, SADMIN):
 			user = User.query(User.username == accountname).fetch()[0]
 			class_selection = self.request.get('selection')
+				
 			#class_selection = Class(classname = class_selection.classname)
 			#self.response.out.write('class_selection:')
 			#self.response.out.write(class_selection)
@@ -264,42 +265,53 @@ class EditReviewStudentsHandler(DefaultDraw):
 
 			#stdnts = User.query(User.classlist.classname == class_selection.classname)
 			
-			class_select = Class(classname = class_selection)
-			#self.response.write(" ** CLASSNAME ** = " + class_select.classname)
-			usersInClass = User.query(User.classlist == class_select).fetch()
+			class_select = Class.query(Class.classname == class_selection).fetch()
+			if len(class_select) > 0:
+				class_select = class_select[0]
+				#self.response.write(" ** CLASSNAME ** = " + class_select.classname)
+				usersInClass = User.query(User.classlist == class_select).fetch()
 
-			#self.response.write(' USERSINCLASS: ')
-			#self.response.write(usersInClass)
-			
-
-			template_values = {
-				'user': user,
-				'class': class_select,
-				'users': usersInClass,
-				'nextAction': 'show students in class'
-			}
-			self.draw(user, template_values)
+				#self.response.write(' USERSINCLASS: ')
+				#self.response.write(usersInClass)
+				template_values = {
+					'user': user,
+					'class': class_select,
+					'users': usersInClass,
+					'nextAction': 'show students in class'
+				}
+				self.draw(user, template_values)
+			elif class_selection == 'all':
+				template_values = {
+					'user': user,
+					'class': Class(classname='All Students'),
+					'users': User.query().fetch(),
+					'nextAction': 'show students in class'
+				}
+				self.draw(user, template_values)
+			else:
+				self.error_redirect('DSUBMIT_NO_CLASS_SELECTED', '/editreviewstudents')
 		else:
 			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
 class DisplayStudentsHandler(DefaultDraw):
 	template_path_post = './html/reg_templates/EditReviewStudents.html'
 	def post(self):
 		accountname = self.session.get('account')
+		userSelection = self.request.get('userSelection')
 		if self.validate_user(accountname, SADMIN):
-			user = User.query(User.username == accountname).fetch()[0]
-			accounttype = user.accounttype
-			userSelection = self.request.get('userSelection')
-			userChosen = User.query(User.username == userSelection).fetch()[0]
-			#self.response.out.write(students)
-			
-			self.response.write("userChosen: " + userChosen.username)
+			if userSelection != '':
+				user = User.query(User.username == accountname).fetch()[0]
+				accounttype = user.accounttype
+				userChosen = User.query(User.username == userSelection).fetch()[0]
+				
 
-			template_values = {
-				'user': user,
-				'userChosen': userChosen,
-				'nextAction': 'show student data'
-			}
-			self.draw(user, template_values)
+				template_values = {
+					'user': user,
+					'userChosen': userChosen,
+					'nextAction': 'show student data'
+				}
+				self.draw(user, template_values)
+			else:
+				self.error_redirect('DSUBMIT_NO_SELECTION', '/editreviewstudents')
 		else:
 			self.error_redirect('INVALID_LOGIN_STATE', '/logout')		
 
@@ -313,14 +325,17 @@ class SaveDataHandler(DefaultDraw):
 				suser = suser[0]
 			else:
 				suser = None
-			
-			userFirstName = self.request.get('firstName')
-			userLastName = self.request.get('lastName')
-			userPassword = self.request.get('passWord')
-			user = User.query(  User.firstname == userFirstName and
-								User.lastname == userLastName and 
-								User.password == userPassword).fetch()
-			self.draw(suser)
+			user_key = self.request.get('user_key')
+			if user_key != '':
+				fname = self.request.get('firstName')
+				lname = self.request.get('lastName')
+				pword = self.request.get('passWord')
+				user = ndb.Key(urlsafe=user_key).get()
+				user.firstname = fname
+				user.lastname = lname
+				user.password = pword
+				user.put()
+			self.success_redirect('DSUBMIT_SUCCESS', '/registrationhomepage')
 		else:
 			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
 class RegisterHandler(DefaultDraw):

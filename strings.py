@@ -6,7 +6,9 @@ STRINGS = {
 	'QKEY_CORRUPT':	'The question key is corrupt.', #bad question key message
 	'RSUBMIT_FAIL': 'There was an unexpected error submitting the response.', #response submit failure message
 	'RSUBMIT_SUCCESS': 'Response submitted successfully!', #response submit success message
-	'DSUBMIT_SUCCESS': 'Data was submitted successfully!'
+	'DSUBMIT_SUCCESS': 'Data was submitted successfully!',
+	'DSUBMIT_NO_SELECTION': 'You did not select a user to edit.',
+	'DSUBMIT_NO_CLASS_SELECTED': 'No class was selected.',
 }
 #account types
 ADMIN	= 'instructor'	#instructor accounttype string
