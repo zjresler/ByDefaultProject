@@ -237,7 +237,7 @@ div.center{
 	height: 100%;
 }
 .console{
-	/*visibility: hidden;*/
+	visibility: hidden;
 	position: fixed;
 	bottom: 0px;
 	left: 0px;
