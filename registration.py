@@ -86,8 +86,6 @@ class AddInstructorHandler(DefaultDraw):
 				else:
 					suser = None
 			user = User.query(User.username == userName, User.accounttype == "instructor").fetch()
-			#self.response.out.write(user);
-			
 			if len(user) != 0:
 				self.template_path_post = './html/reg_templates/AddNewInstructor.html'
 				template_values = { 'outcome': 'duplicate', 'email': userName }
@@ -106,19 +104,16 @@ class AddInstructorHandler(DefaultDraw):
 				self.draw(suser, template_values)
 				
 			else:
-				passWord = str(random.randrange(100000,1000000))
-				self.template_path_post = './html/reg_templates/AddNewInstructor.html'
-				template_values = { 'outcome': 'unique', 'password': passWord, 'email': userName }
-				self.draw(suser, template_values)
-				newUser = User(username=userName,password=passWord,
-					lastname=lastNameFromForm,firstname=firstNameFromForm,
-					email=emailAddressFromForm,accounttype="instructor",)
-				newUser.put()
+				sender = 'Question App Support <admin@{}.appspotmail.com>'.format(app_identity.get_application_id())
+				to = emailAddressFromForm
+				subject = 'Activation Your Account'
+				body = 'Please click the following link to create your account  http://{}.appspot.com/registerinstructor?username={}'.format(app_identity.get_application_id(),emailAddressFromForm.split('@')[0])
+				email = Register().make_mail_message(sender,to,subject,body)
+				if email != None:
+					email.send()
 		else:
 			self.error_redirect('INVALID_LOGIN_STATE', '/logout')	
-			
-		
-		#self.redirect('/registrationhomepage')
+
 class AddStudentHandler(DefaultDraw):
 	template_path_get = './html/reg_templates/AddNewStudents.html'
 	def get(self):
@@ -134,6 +129,7 @@ class AddStudentHandler(DefaultDraw):
 	def post(self):
 		accountname = self.session.get('account')
 
+
 		if self.validate_user(accountname, SADMIN):	
 			classFromForm = None
 			if len(Class.query(Class.classname == self.request.get('class')).fetch()) == 0:
@@ -142,12 +138,8 @@ class AddStudentHandler(DefaultDraw):
 			else:
 				classFromForm = Class.query(Class.classname == self.request.get('class')).fetch()[0]
 			textFromForm = self.request.get('textArea').strip()
-			
-			
 			user = User.query(User.username == accountname).fetch()[0]
 			accounttype = user.accounttype
-
-			
 			instructorAssigned = self.request.get('instructorAssigned')
 			instructor = User.query(User.username == instructorAssigned).fetch()[0]
 			instructor.classlist.append(classFromForm)
@@ -158,25 +150,28 @@ class AddStudentHandler(DefaultDraw):
 				#check for valid email syntax
 				EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 				#if valid
-				students = User.query(User.username == address).fetch()
-				if len(students) == 0:
-					sender = 'Question App Support <admin@{}.appspotmail.com>'.format(app_identity.get_application_id())
-					to = address
-					subject = 'Activation Your Account'
-					body = 'Please click the following link to create your account  http://{}.appspot.com/register?username={}&classkey={}'.format(app_identity.get_application_id(),address.split('@')[0],classFromForm.key.urlsafe())
-					email = Register().make_mail_message(sender,to,subject,body)
-					if email != None:
-						email.send()
+				if not EMAIL_REGEX.match(address):
+					pass
 				else:
-					student = students[0]
-					classList = student.classlist
-					#already in class
-					if (classFromForm in classList):
-						pass
-					#add student to new class
+					students = User.query(User.username == address.split('@')[0]).fetch()
+					if len(students) == 0:
+						sender = 'Question App Support <admin@{}.appspotmail.com>'.format(app_identity.get_application_id())
+						to = address
+						subject = 'Activate Your Account'
+						body = 'Please click the following link to create your account  http://{}.appspot.com/register?username={}&classkey={}'.format(app_identity.get_application_id(),address.split('@')[0],classFromForm.key.urlsafe())
+						email = Register().make_mail_message(sender,to,subject,body)
+						if email != None:
+							email.send()
 					else:
-						student.classlist.append(classFromForm)
-						student.put()
+						student = students[0]
+						classList = student.classlist
+						#already in class
+						if (classFromForm in classList):
+							pass
+						#add student to new class
+						else:
+							student.classlist.append(classFromForm)
+							student.put()
 			self.success_redirect('DSUBMIT_SUCCESS', '/registrationhomepage')
 		else:
 			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
@@ -319,6 +314,7 @@ class DisplayStudentsHandler(DefaultDraw):
 class SaveDataHandler(DefaultDraw):
 	template_path_post = './html/reg_templates/EditReviewStudents.html'
 	def post(self):
+
 		accountname = self.session.get('account')
 		if self.validate_user(accountname, SADMIN):
 			suser = User.query(User.username == accountname).fetch()
@@ -344,63 +340,118 @@ class RegisterHandler(DefaultDraw):
 	def get(self):		
 		username = self.request.get('username')
 		classkey = self.request.get('classkey')
+		error = self.request.get('error')
+		errormessage = ''
 		accounttype = 'student'
+		if error == 1 or error == '1':
+			errormessage = "Password needs to be at least 8 characters long"
+		elif error == 2 or error == '2':
+			errormessage = "Passwords do not match"
+		elif error == 3 or error == '3':
+			errormessage = "First name or Last name not filled in"
 
-		template_values = { 'classkey' : classkey, 'username' : username, 'accounttype': accounttype}
+		template_values = { 'classkey' : classkey, 'username' : username, 'accounttype': accounttype, 'error':errormessage}
 		self.draw(None, template_values)
-		
 	def post(self):
 		uname = self.request.get('username')
 		pword = self.request.get('password')
+		pword2 = self.request.get('password2')
 		fname = self.request.get('firstname')
 		lname = self.request.get('lastname')
-		eml = uname
+		eml = self.request.get('email')
 		key = self.request.get('classkey')
 		type = 'student'
 		
-		if(fname == None) or (lname == None) or (pword == None) or (len(pword) < 8):
-			self.error_redirect('DSUBMIT_BAD_DATA', '/register?username=' + uname + '&classkey='+key)
+		if(fname == None) or (lname == None) or (pword == None) or (len(pword)) < 8 or pword != pword2:
+		#error codes
+		#1 pwd not long enough
+		#2 pwd no match
+		#3 fname,lname not filled out
+			if (len(pword)) < 8:
+				self.redirect('/register?username=' + uname + '&classkey='+key+'&error=1')
+			if pword != pword2:
+				self.redirect('/register?username=' + uname + '&classkey='+key+'&error=2')
+			if "@" not in eml:
+				self.redirect('/register?username=' + uname + '&classkey='+key+'&error=4')
+			if "." not in eml:
+				self.redirect('/register?username=' + uname + '&classkey='+key+'&error=4')
+			self.redirect('/register?username=' + uname + '&classkey='+key+'&error=3')
 		else:
 			newStudent = User(username = uname,password = pword,lastname = lname,firstname = fname,email = eml,accounttype = type)
 			classy = Key(urlsafe = key).get()
 			newStudent.classlist.append(classy)
 			newStudent.put()
 			time.sleep(2)
-			self.success_redirect('DSUBMIT_SUCCESS', '/')
-			
-class CreateClassHandler(DefaultDraw):
-	template_path_get = './html/createclass.html'
+			self.success_redirect('DSUBMIT_ACCT_SUCCESS', '/')
+				
+class RegisterInstructorHandler(DefaultDraw):
+	template_path_get = '/html/reg_templates/RegisterInstructor.html'
 	def get(self):
-		accountname = self.session.get('account')
-		if self.validate_user(accountname, SADMIN):
-			user = User.query(User.username == accountname).fetch()[0]
-			data = {
-				'instructors': user.instructors,
-			}
-			self.draw(user, data)
-		else:
-			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
+
+		username = self.request.get('username')
+		classkey = self.request.get('classkey')
+		error = self.request.get('error')
+		errormessage = ''
+		accounttype = 'instructor'
+		if error == 1 or error == '1':
+			errormessage = "Password needs to be at least 8 characters long"
+		elif error == 2 or error == '2':
+			errormessage = "Passwords do not match"
+		elif error == 3 or error == '3':
+			errormessage = "First name or Last name not filled in"
+
+		template_values = { 'classkey' : classkey, 'username' : username, 'accounttype': accounttype, 'error':errormessage}
+		self.draw(None, template_values)
 	def post(self):
-		accountname = self.session.get('account')
-		if self.validate_user(accountname, SADMIN):
-			user = User.query(User.username == accountname).fetch()[0]
-			newclassname = self.request.get('newclassname')
-			instructorname = self.request.get('instructor')
-			if self.validate_user(instructorname, ADMIN):
-				instructor = User.query(User.username == instructorname).fetch()[0]
-				if newclassname != '' and len( Class.query(Class.classname == newclassname).fetch() ) == 0:
-					c = Class(classname = newclassname)
-					c.put()
-					time.sleep(2)
-					instructor.classlist.append(c)
-					instructor.put()
-					if not( c in instructor.classlist):
-						self.error_redirect('DSUBMIT_FAILED_ADD_CLASS', '/createclass?')
-					else:
-						self.success_redirect('DSUBMIT_SUCCESS', '/registrationhomepage')
-				else:
-					self.error_redirect('DSUBMIT_BAD_DATA', '/createclass')
-			else:
-				self.error_redirect('DSUBMIT_BAD_DATA', '/createclass')
+		uname = self.request.get('username')
+		pword = self.request.get('password')
+		pword2 = self.request.get('password2')
+		fname = self.request.get('firstname')
+		lname = self.request.get('lastname')
+		eml = self.request.get('email')
+		#key = self.request.get('classkey')
+		type = 'instructor'
+		
+		if(fname == None) or (lname == None) or (pword == None) or (len(pword)) < 8 or pword != pword2:
+		#error codes
+		#1 pwd not long enough
+		#2 pwd no match
+		#3 fname,lname not filled out
+		#4 invalid email
+			if (len(pword)) < 8:
+				self.redirect('/registerinstructor?username=' + uname + '&classkey='+key+'&error=1')
+			if pword != pword2:
+				self.redirect('/registerinstructor?username=' + uname + '&classkey='+key+'&error=2')
+			if "@" not in eml:
+				self.redirect('/registerinstructor?username=' + uname + '&classkey='+key+'&error=4')
+			if "." not in eml:
+				self.redirect('/registerinstructor?username=' + uname + '&classkey='+key+'&error=4')
+			self.redirect('/register?username=' + uname + '&classkey='+key+'&error=3')
 		else:
-			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
+			newInstructor = User(username = uname,password = pword,lastname = lname,firstname = fname,email = eml,accounttype = type)
+			#classy = Key(urlsafe = key).get()
+			#newInstructor.classlist.append(classy)
+			newInstructor.put()
+			time.sleep(2)
+			self.success_redirect('DSUBMIT_ACCT_SUCCESS', '/')
+			
+class AddInstructorToClassHandler(BaseHandler):
+	def get(self):
+		instructors = User.query(User.accounttype == 'instructor').fetch()
+		classes = Class.query().fetch()
+		
+		template = JINJA_ENVIRONMENT.get_template('/html/reg_templates/addtoclass.html')
+		
+		template_values = { 'classes' : classes, 'instructors' : instructors}
+		self.response.write(template.render(template_values))
+		
+	def post(self):
+		instructorAssigned = self.request.get("instructorAssigned")
+		classAssigned = self.request.get("classAssigned")
+		
+		instructor = User.query(User.username == instructorAssigned).fetch()[0]
+		classy = Class.query(Class.classname == classAssigned).fetch()[0]
+		instructor.classlist.append(classy)
+		instructor.put()
+		self.success_redirect('DSUBMIT_ACCT_SUCCESS', '/')
+		

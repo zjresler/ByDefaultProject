@@ -165,6 +165,7 @@ app = webapp2.WSGIApplication([
 #	('/enroll', AddUserToClass),
 	('/displaystudents', DisplayStudentsHandler),
 	('/savedata', SaveDataHandler),
-	('/createclass', CreateClassHandler),
 	('/ctu', createresettestusers),
+	('/registerinstructor', RegisterInstructorHandler),
+	('/addtoclass', AddInstructorToClassHandler)
 ], config=config, debug=True)

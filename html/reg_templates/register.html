@@ -3,12 +3,14 @@
 <link type="text/css" rel="stylesheet" href="/css/BeAll.css">
 <title>register page</title></head>
 <body>
+
 	<div class="bodyArea">
 		Create new user:
 
 		<form action='/register' method='POST' id='userform'>
 
 
+					{{error}}<br>
 					User Name: <br>
 					<input  type ="text" name="username1" disabled value='{{username}}' /><br>
 					<input  type ="hidden" name="username"  value='{{username}}' /><br>
@@ -19,6 +21,7 @@
 					Last Name: <br>
 					<input  type="text" name="lastname"/>*<br>
 
+
 					Password:<br>
 					<input type="password" name="password"/>*<br>
 					
@@ -26,6 +29,7 @@
 
 
 		<input type="submit" value="Register">
+
 
 		</form>
 	</div>

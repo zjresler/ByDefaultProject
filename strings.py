@@ -11,6 +11,7 @@ STRINGS = {
 	'DSUBMIT_NO_CLASS_SELECTED': 'No class was selected.',
 	'DSUBMIT_BAD_DATA': 'Data failed to validate.',
 	'DSUBMIT_FAILED_ADD_CLASS': 'Failed it add user to class because reasons, will probably work if you try again...<br/>(Google app engine is poo).',
+	'DSUBMIT_ACCT_SUCCESS': 'Account Registered Successfully',
 }
 #account types
 ADMIN	= 'instructor'	#instructor accounttype string
