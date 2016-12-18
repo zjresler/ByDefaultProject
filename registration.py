@@ -341,43 +341,32 @@ class SaveDataHandler(DefaultDraw):
 			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
 class RegisterHandler(DefaultDraw):
 	template_path_get = './html/reg_templates/register.html'
-	def get(self):
-		accountname = self.session.get('account')
-		if self.validate_user(accountname, SADMIN):
-			user = User.query(User.username == accountname).fetch()
-			if len(user) !=0:
-				user = user[0]
-			else:
-				user = None
-			username = self.request.get('username')
-			classkey = self.request.get('classkey')
-			accounttype = 'student'
+	def get(self):		
+		username = self.request.get('username')
+		classkey = self.request.get('classkey')
+		accounttype = 'student'
 
-			template_values = { 'classkey' : classkey, 'username' : username, 'accounttype': accounttype}
-			self.draw(user, template_values)
-		else:
-			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
+		template_values = { 'classkey' : classkey, 'username' : username, 'accounttype': accounttype}
+		self.draw(None, template_values)
+		
 	def post(self):
-		accountname = self.session.get('account')
-		if self.validate_user(accountname, SADMIN):
-			uname = self.request.get('username')
-			pword = self.request.get('password')
-			fname = self.request.get('firstname')
-			lname = self.request.get('lastname')
-			eml = uname
-			key = self.request.get('classkey')
-			type = 'student'
-			
-			if(fname == None) or (lname == None) or (pword == None) or (len(pword) < 8):
-				self.redirect('/register?username=' + uname + '&classkey='+key)
-			else:
-				newStudent = User(username = uname,password = pword,lastname = lname,firstname = fname,email = eml,accounttype = type)
-				classy = Key(urlsafe = key).get()
-				newStudent.classlist.append(classy)
-				newStudent.put()
-				self.redirect('/')
+		uname = self.request.get('username')
+		pword = self.request.get('password')
+		fname = self.request.get('firstname')
+		lname = self.request.get('lastname')
+		eml = uname
+		key = self.request.get('classkey')
+		type = 'student'
+		
+		if(fname == None) or (lname == None) or (pword == None) or (len(pword) < 8):
+			self.error_redirect('DSUBMIT_BAD_DATA', '/register?username=' + uname + '&classkey='+key)
 		else:
-			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
+			newStudent = User(username = uname,password = pword,lastname = lname,firstname = fname,email = eml,accounttype = type)
+			classy = Key(urlsafe = key).get()
+			newStudent.classlist.append(classy)
+			newStudent.put()
+			time.sleep(2)
+			self.success_redirect('DSUBMIT_SUCCESS', '/')
 			
 class CreateClassHandler(DefaultDraw):
 	template_path_get = './html/createclass.html'
