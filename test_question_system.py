@@ -22,12 +22,10 @@ from google.appengine.ext.ndb import Key
 from webapp2_extras import sessions
 from webapp2_extras.securecookie import SecureCookieSerializer
 
-
 JINJA_ENVIRONMENT = jinja2.Environment(
 		loader=jinja2.FileSystemLoader(os.path.dirname(__file__))
 )
 
-	
 class QuestionTests(unittest.TestCase):
 	def setUp(self):
 		self.student = User(
@@ -170,13 +168,13 @@ class QuestionTests(unittest.TestCase):
 		secure_cookie_serializer = SecureCookieSerializer(SECRET_KEY)
 		serialized = secure_cookie_serializer.serialize('session', session)
 		headers = {'Cookie':'session=%s' % serialized}
-		respond.request = Request.blank('/respond?response=test&cname=test_category')
+		respond.request = Request.blank('/respond?add_to_category=1&response=test&cname=Default&new_cname=test_category')
 		respond.request.method='POST'
 		respond.request.headers=headers
 		
 		#ensure that the vars were passed to test properly
 		self.assertTrue(respond.request.get('response') == 'test')
-		self.assertTrue(respond.request.get('cname') == 'test_category')
+		self.assertTrue(respond.request.get('new_cname') == 'test_category')
 		
 		temp = Category.query(Category.name=='test_category').fetch()
 		for c in temp:
@@ -205,7 +203,7 @@ class QuestionTests(unittest.TestCase):
 		secure_cookie_serializer = SecureCookieSerializer(SECRET_KEY)
 		serialized = secure_cookie_serializer.serialize('session', session)
 		headers = {'Cookie':'session=%s' % serialized}
-		respond.request = Request.blank('/respond?response=test&cname=test_category')
+		respond.request = Request.blank('/respond?add_to_category=1&response=test&cname=test_category')
 		respond.request.method='POST'
 		respond.request.headers=headers
 		

@@ -5,6 +5,7 @@ import os
 import urllib
 import jinja2
 import re
+import time
 
 from db_entities import *
 from basehandler import BaseHandler
@@ -375,5 +376,42 @@ class RegisterHandler(DefaultDraw):
 				newStudent.classlist.append(classy)
 				newStudent.put()
 				self.redirect('/')
+		else:
+			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
+			
+class CreateClassHandler(DefaultDraw):
+	template_path_get = './html/createclass.html'
+	def get(self):
+		accountname = self.session.get('account')
+		if self.validate_user(accountname, SADMIN):
+			user = User.query(User.username == accountname).fetch()[0]
+			data = {
+				'instructors': user.instructors,
+			}
+			self.draw(user, data)
+		else:
+			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
+	def post(self):
+		accountname = self.session.get('account')
+		if self.validate_user(accountname, SADMIN):
+			user = User.query(User.username == accountname).fetch()[0]
+			newclassname = self.request.get('newclassname')
+			instructorname = self.request.get('instructor')
+			if self.validate_user(instructorname, ADMIN):
+				instructor = User.query(User.username == instructorname).fetch()[0]
+				if newclassname != '' and len( Class.query(Class.classname == newclassname).fetch() ) == 0:
+					c = Class(classname = newclassname)
+					c.put()
+					time.sleep(2)
+					instructor.classlist.append(c)
+					instructor.put()
+					if not( c in instructor.classlist):
+						self.error_redirect('DSUBMIT_FAILED_ADD_CLASS', '/createclass?')
+					else:
+						self.success_redirect('DSUBMIT_SUCCESS', '/registrationhomepage')
+				else:
+					self.error_redirect('DSUBMIT_BAD_DATA', '/createclass')
+			else:
+				self.error_redirect('DSUBMIT_BAD_DATA', '/createclass')
 		else:
 			self.error_redirect('INVALID_LOGIN_STATE', '/logout')
