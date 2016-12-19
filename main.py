@@ -45,13 +45,12 @@ class DumpDBHandler(BaseHandler):
 			q.key.delete()
 		for u in User.query().fetch():
 			u.key.delete()
-		#if len(User.query().fetch()) !=0:
-		#	self.response.write("DEZ USERS BE TOO STRONK MON!<br>")
 		for c in Class.query().fetch():
 			c.key.delete()
 		for t in Category.query().fetch():
 			t.key.delete()
-		self.response.write("We be dumpin dat dank DB!")
+		time.sleep(2)
+		self.redirect('/ctu')
 		
 class TestOutputHandler(BaseHandler):
 	def get(self):
@@ -113,11 +112,12 @@ class createresettestusers(BaseHandler):
 		else:
 			i = User.query(User.username == 'instructor').fetch()[0]
 			i_key = i.key
-			
+		time.sleep(2)
 		c = Class(classname = 'TESTCLASS')
 		d = Class(classname = 'test2')
 		c.unique_put()
 		d.unique_put()
+		time.sleep(2)
 		s = s_key.get()
 		u = u_key.get()
 		i = i_key.get()
@@ -133,6 +133,7 @@ class createresettestusers(BaseHandler):
 		i.put()
 		u.put()
 		s.put()
+		time.sleep(2)
 		self.redirect('/')
 
 
@@ -154,7 +155,7 @@ app = webapp2.WSGIApplication([
     ('/instructorhomepage', InstructorHomeHandler),
 #	('/t', ValidateUserTestHandler),
 	('/tests', TestOutputHandler),
-#	('/ddb', DumpDBHandler),
+	('/ddb', DumpDBHandler),
     ('/registrationhomepage', RegistrationMainHandler),
     ('/addinstructor', AddInstructorHandler),
     ('/addstudent', AddStudentHandler),

@@ -122,7 +122,41 @@ class QuestionTests(unittest.TestCase):
 		
 		del self.respond
 		del self.ask
+	
+	def test_validate_user(self):
+		respond = BaseHandler()
 		
+		#test bad user
+		self.assertFalse(respond.validate_user('sdfhskfhksadhgshk00091919191'))
+		self.assertFalse(respond.validate_user('sdfhskfhksadhgshk00091919191', STUDENT))
+		self.assertFalse(respond.validate_user('sdfhskfhksadhgshk00091919191', ADMIN))
+		self.assertFalse(respond.validate_user('sdfhskfhksadhgshk00091919191', SADMIN))
+		
+		#test another bad user
+		self.assertFalse(respond.validate_user('ggggggggggggggggggg'))
+		self.assertFalse(respond.validate_user('ggggggggggggggggggg', STUDENT))
+		self.assertFalse(respond.validate_user('ggggggggggggggggggg', ADMIN))
+		self.assertFalse(respond.validate_user('ggggggggggggggggggg', SADMIN))
+		
+		#test good users, no types
+		self.assertTrue(respond.validate_user('student_test'))
+		self.assertTrue(respond.validate_user('instructor_test'))
+		self.assertTrue(respond.validate_user('admin_test'))
+		
+		#test good users, correct types
+		self.assertTrue(respond.validate_user('student_test', STUDENT))
+		self.assertTrue(respond.validate_user('instructor_test', ADMIN))
+		self.assertTrue(respond.validate_user('admin_test', SADMIN))
+		
+		#test good users, bad types
+		self.assertFalse(respond.validate_user('student_test', ADMIN))
+		self.assertFalse(respond.validate_user('student_test', SADMIN))
+		self.assertFalse(respond.validate_user('instructor_test', STUDENT))
+		self.assertFalse(respond.validate_user('instructor_test', SADMIN))
+		self.assertFalse(respond.validate_user('admin_test', STUDENT))
+		self.assertFalse(respond.validate_user('admin_test', ADMIN))
+		
+		del respond
 	def test_instructor_can_respond(self):
 		respond = ResponseHandler()
 		session = {
