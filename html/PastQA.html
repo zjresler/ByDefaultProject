@@ -1,31 +1,29 @@
-<!DOCTYPE html>
 <html>
 <head>
 	<title>{{title}}</title>
-	<link rel="stylesheet" type="text/css" href="../css/BeAll.css">
+	<link rel="stylesheet" type="text/css" href="/css/BeAll.css">
 </head>
 <body>
-	<h1 id="SysName">By Default</h1>
-
-	<div class="bannerArea">
-             <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
-        Logged in as:  {{ accountname }}
-        <form action='/logout' method='GET'><input type="submit" value="Logout"></form>
-        <form action='/studenthomepage' method='GET'><input type="submit" value="Home"></form>
-        <form action='/faq' method='GET'><input type="submit"  value="View FAQ"></form>
-    </div>
-	<h2 id="FAQ">Review Past Questions and Answers Questions </h2>
-	
-
-	<table class="questionAnswerArea">
-		<tr></th><th>Question</th><th>Respondent</th><th>Response</th></tr>
-		{%for q in questions %}
-		<tr class="question">
-			<td>{{ q.message }}</td>{%if q.response!=None%}<td>{%if q.respondentUID!=None%}{{q.respondentUID.get().username}}{%endif%}</td><td>{{ q.response }}</td>{%endif%}	
-		</tr>
-		{%endfor%}
+	<div class = "bodyArea">
+		<h2 class="pagehead">View Questions</h2>
 		
-	</table>
-
+		{% if questions|length == 0 %}
+			<h3 class="pagehead">You have no questions.</h3>
+		{% else %}
+			<table id="pastqa_table" class="center">
+				<tr class="pastqa_cell" ><th class="pastqa_cell">Class</th><th class="pastqa_cell">Respondent</th><th class="pastqa_cell">Question</th><th class="pastqa_cell">Response</th></tr>
+				{%for q in questions %}
+				<tr style={% if loop.index0%2 == 0 %} "background-color: rgb(0,120,255);" {% else %} "background-color: lightblue;" {% endif %} class="pastqa_cell">
+					<td class="pastqa_cell">{{ q.classUID.get().classname }}</td>
+					<td class="pastqa_cell">{%if q.respondentUID!=None%}{{q.respondentUID.get().username}}{%endif%}</td>
+					<td class="pastqa_cell">{{ q.message }}</td>
+					<td class="pastqa_cell">{{ q.response }}</td>
+				</tr>
+				{%endfor%}
+				
+			</table>
+		{% endif %}
+	</div>
+	{{banner}}
 </body>
 </html>

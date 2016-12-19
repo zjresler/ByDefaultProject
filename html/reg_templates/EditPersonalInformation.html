@@ -1,6 +1,6 @@
-<!DOCTYPE html>
 <html>
 <head>
+<link type="text/css" rel="stylesheet" href="/css/BeAll.css">
 <style>
 table {
     font-family: arial, sans-serif;
@@ -23,40 +23,41 @@ footer {
 	bottom: 0px;
 }
 </style>
-
-<h1>Personal Account</h1>
-<h2>Edit Personal Data</h2>
-<h3>{{ user }}</h3>
-
 </head>
 <body>
+	<div class="bodyArea">
+		<h1 class="pagehead">Personal Account</h1>
+		<h2 class="pagehead">Edit Personal Data</h2>
+		<h3 class="pagehead">{{ user }}</h3>
+		<form action='/editpersonalinformation' method='POST'>
+		<table>
+			<tr>
+			<th>Account Type</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Email Address</th>
+			<th>Password</th>
+		</tr>
+		<tr>
+			<td>{{ accounttype }}</td>
+			<td><input type="text" name="firstName" value='{{firstname}}' autofocus></td>
+			<td><input type="text" name="lastName" value='{{lastname}}'></td>
+			<td>{{ email }}</td>
+			<td><input type="text" name="passWord" value='{{password}}'></td>
+		</tr>
+		</table>
+			<input type='submit' value="SUBMIT CHANGES">
+		</form>
 
-<form action='/editpersonalinformation' method='POST'>
-<table>
-  <tr>
-    <th>Account Type</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Email Address</th>
-    <th>Password</th>
-  </tr>
-  <tr>
-    <td>{{ accounttype }}</td>
-    <td><input type="text" name="firstName" value='{{firstname}}' autofocus></td>
-    <td><input type="text" name="lastName" value='{{lastname}}'></td>
-    <td>{{ email }}</td>
-    <td><input type="text" name="passWord" value='{{password}}'></td>
-  </tr>
-</table>
-	<input type='submit' value="SUBMIT CHANGES">
-</form>
+		<br><br>
 
-<br><br>
-
-<form action='/registrationhomepage'>
-    <h3><input type="submit" value="HOME"><strong> Return to Account Administration, Main Page</strong></h3>
-</form>
-<br><br><br><br>
+		<form action='/registrationhomepage'>
+			<h3><input type="submit" value="HOME"><strong> Return to Account Administration, Main Page</strong></h3>
+		</form>
+		<br><br><br><br>
+		<footer><i><p>Note: Please retain for your records: Password information necessary for login.</p></i></footer>
+	</div>
+	{{banner}}
 </body>
-<footer><i><p>Note: Please retain for your records: Password information necessary for login.</p></i></footer>
+
 </html>

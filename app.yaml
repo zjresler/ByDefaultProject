@@ -1,5 +1,5 @@
-application: zreslercs361sprint3meeting
-version: 1
+application: level-agent-152917
+version: 25
 runtime: python27
 api_version: 1
 threadsafe: yes
@@ -11,7 +11,8 @@ handlers:
 
 - url: /css
   static_dir: css
-  
+- url: /texture
+  static_dir: texture
 - url: .*
   script: main.app
 

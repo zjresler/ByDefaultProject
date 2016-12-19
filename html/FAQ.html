@@ -1,36 +1,30 @@
+<html>
 <head>
-  <title>FAQ</title>
-	<link href="../css/BeAll.css"  rel="stylesheet" type="text/css"/>
+	<title>FAQ</title>
+	<link type="text/css" rel="stylesheet" href="/css/BeAll.css" >
 </head>
 <body>
-	<h1 id="SysName">By Default</h1>
-	<div class="bannerArea">
-             <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
-        Logged in as:  {{ accountname }}
-        <form action='/logout' method='GET'><input type="submit" value="Logout"></form>
-		<form {{homeargs}} method='GET'><input type="submit" value="Home"></form>
-        <form action='/PastQA' method='GET'><input type="submit"  value="View Questions"></form>
+	<div class="bodyArea">
+		<h2 class="pagehead">FAQ for {{classname}}</h2>
+		{% if class|sort(attribute = 'category')|length == 0 %}
+			<h3 class="pagehead">No FAQ entries found.</h3>
+		{% else %}
+			<table id="faq_table" class="center">
+				<tr class="faq_cell">
+					<th class="faq_cell">Category</th>
+					<th class="faq_cell">Question</th>
+					<th class="faq_cell">Answer</th>
+				</tr>
+				{% for c in class|sort(attribute = 'category')%}
+					<tr style={%if loop.index0%2 == 0 %}"background-color: rgb(0,120,255);" {% else %} "background-color: lightblue;" {% endif %} class="faq_cell">
+						<td class="faq_cell"><div class="center">{{c.category.get().name}}</div></td>
+						<td class="faq_cell"><div class="center">{{c.message}}</div></td>
+						<td class="faq_cell"><div class="center">{{c.response}}</div></td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% endif %}
 	</div>
-<table style="width:100%">
-<tr>
-
-<th> Question </th>
-<th> Answer </th>
-<th> Category </th>
-</tr>
-<tr>
-	<head>
-{{classname}}</head>	
-{% for c in class%}
-
-		<tr><td>{{c.message}}</td>
-		<td>{{c.response}}</td>
-		<td>{{c.category.get().name}}</td>
-		</tr>
-{% endfor %}
-  </tr>
-</table>
-
-
-
+	{{banner}}
 </body>
+</html>

@@ -68,47 +68,72 @@ class TestOutputHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
     def get(self):
-		#testing stuff
-		u = User(
-			username = 'admin',
-			password = 'admin',
-			firstname = 'test',
-			lastname = 'test',
-			email = 'test',
-			accounttype ='admin'
-		)
-		s = User(
-			username = 'student',
-			password = 'student',
-			firstname = 'student',
-			lastname = 'student',
-			email = 'student',
-			accounttype ='student'
-		)
-		u.unique_put()
-		s.unique_put()
-		
-		c = Class(
-			classname = 'TESTCLASS'
-		)
+		template = JINJA_ENVIRONMENT.get_template('./html/login.html')
+		self.response.write(template.render({'banner': BANNER_DEFAULT_0 + BANNER_END}))
+class createresettestusers(BaseHandler):
+	def get(self):
+		if len(User.query(User.username == 'admin').fetch()) == 0:
+			u = User(
+				username = 'admin',
+				password = 'admin',
+				firstname = 'test',
+				lastname = 'test',
+				email = 'test',
+				accounttype ='admin'
+			)
+			u_key = u.unique_put()
+		else:
+			u = User.query(User.username == 'admin').fetch()[0]
+			u_key = u.key
+			
+		if len(User.query(User.username == 'student').fetch()) == 0:
+			s = User(
+				username = 'student',
+				password = 'student',
+				firstname = 'student',
+				lastname = 'student',
+				email = 'student',
+				accounttype ='student'
+			)
+			s_key = s.unique_put()
+		else:
+			s = User.query(User.username == 'student').fetch()[0]
+			s_key = s.key
+			
+		if len(User.query(User.username == 'instructor').fetch()) == 0:
+			i = User(
+				username = 'instructor',
+				password = 'instructor',
+				firstname = 'instructor',
+				lastname = 'instructor',
+				email = 'instructor',
+				accounttype ='instructor'
+			)
+			i_key = i.unique_put()
+		else:
+			i = User.query(User.username == 'instructor').fetch()[0]
+			i_key = i.key
+			
+		c = Class(classname = 'TESTCLASS')
+		d = Class(classname = 'test2')
 		c.unique_put()
-		u = User.query(User.username == 'admin').fetch()[0]
-		s = User.query(User.username == 'student').fetch()[0]
+		d.unique_put()
+		s = s_key.get()
+		u = u_key.get()
+		i = i_key.get()
 		s.reset_classlist()
 		u.reset_classlist()
+		i.reset_classlist()
 		u.add_class(c)
+		u.add_class(d)
 		s.add_class(c)
-		
+		s.add_class(d)
+		i.add_class(c)
+		i.add_class(d)
+		i.put()
 		u.put()
 		s.put()
-		
-		
-		accountname = self.session.get('account')
-		accounttype = self.session.get('accounttype')
-		template = JINJA_ENVIRONMENT.get_template('./html/login.html')
-		self.response.write(template.render())
-
-
+		self.redirect('/')
 
 
 config = {}
@@ -135,72 +160,12 @@ app = webapp2.WSGIApplication([
     ('/addstudent', AddStudentHandler),
 	('/PastQA', PastQAHandler),
 	('/faq', FAQHandler),
-	('/register', RegisterStudentHandler),
+	('/register', RegisterHandler),
+	('/editreviewstudents', EditReviewStudentsHandler),
+#	('/enroll', AddUserToClass),
+	('/displaystudents', DisplayStudentsHandler),
+	('/savedata', SaveDataHandler),
+	('/ctu', createresettestusers),
 	('/registerinstructor', RegisterInstructorHandler),
 	('/addtoclass', AddInstructorToClassHandler)
-#	('/enroll', AddUserToClass)
-    ], config=config, debug=True)
-
-	
-if len(User.query(User.username == 'admin').fetch()) == 0:
-	u = User(
-		username = 'admin',
-		password = 'admin',
-		firstname = 'test',
-		lastname = 'test',
-		email = 'test',
-		accounttype ='admin'
-	)
-	u_key = u.unique_put()
-else:
-	u = User.query(User.username == 'admin').fetch()[0]
-	u_key = u.key
-	
-if len(User.query(User.username == 'student').fetch()) == 0:
-	s = User(
-		username = 'student',
-		password = 'student',
-		firstname = 'student',
-		lastname = 'student',
-		email = 'student',
-		accounttype ='student'
-	)
-	s_key = s.unique_put()
-else:
-	s = User.query(User.username == 'student').fetch()[0]
-	s_key = s.key
-	
-if len(User.query(User.username == 'instructor').fetch()) == 0:
-	i = User(
-		username = 'instructor',
-		password = 'instructor',
-		firstname = 'instructor',
-		lastname = 'instructor',
-		email = 'instructor',
-		accounttype ='instructor'
-	)
-	i_key = i.unique_put()
-else:
-	i = User.query(User.username == 'instructor').fetch()[0]
-	i_key = i.key
-	
-c = Class(classname = 'TESTCLASS')
-d = Class(classname = 'test2')
-c.unique_put()
-d.unique_put()
-s = s_key.get()
-u = u_key.get()
-i = i_key.get()
-s.reset_classlist()
-u.reset_classlist()
-i.reset_classlist()
-u.add_class(c)
-u.add_class(d)
-s.add_class(c)
-s.add_class(d)
-i.add_class(c)
-i.add_class(d)
-i.put()
-u.put()
-s.put()
-
+], config=config, debug=True)

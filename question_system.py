@@ -23,6 +23,7 @@ import time
 
 from db_entities import *
 from basehandler import BaseHandler
+from basehandler import BannerStandard
 from strings import *
 
 from google.appengine.ext import ndb
@@ -35,7 +36,18 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 
 class QuestionHandler(BaseHandler):
-	def get(self): #where question is composed by the user
+	template_path_get = './html/ask.html'
+	def draw(self, user, template_values={}):
+		template_values['banner'] = self.build_banner(user)
+		if self.request.method == 'GET':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_get)
+			self.response.write(template.render(template_values))
+		else:
+			exit('Write method called with invalid method.')
+		
+		
+	def get(self):
+		#where question is composed by the user
 		#gets the accountname, accounttype, and classname
 		accountname = self.session.get('account')
 		accounttype = self.session.get('accounttype')
@@ -49,8 +61,11 @@ class QuestionHandler(BaseHandler):
 			#TODO: add a loop to check that the class is in the user's classlist
 			if len(classes) == 1:
 				#class was found
-				template = JINJA_ENVIRONMENT.get_template('./html/ask.html')
-				self.response.write(template.render())
+				user = User.query(User.username == accountname).fetch()[0]
+				data = {
+					'classname': classname,
+				}
+				self.draw(user, data)
 			else:
 				#class was not found or more than one class was found
 				#redirect to your homepage
@@ -92,7 +107,15 @@ class QuestionHandler(BaseHandler):
 			return -1
 
 class ResponseHandler(BaseHandler):
-
+	template_path_get = './html/respond.html'
+	def draw(self, user, template_values={}):
+		template_values['banner'] = self.build_banner(user)
+		if self.request.method == 'GET':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_get)
+			self.response.write(template.render(template_values))
+		else:
+			exit('Write method called with invalid method.')
+		
 	def get(self):
 		#display all of the questions and post when one is selected
 		#	class_name = self.request.get('class_name')
@@ -123,9 +146,11 @@ class ResponseHandler(BaseHandler):
 					'question': question,
 					'accountname': accountname,
 					'categories': classy.categories,
+					'classname': classname,
 				}
-				template = JINJA_ENVIRONMENT.get_template('./html/respond.html')
-				self.response.write(template.render(data))
+				
+				user = User.query(User.username == accountname).fetch()[0]
+				self.draw(user, data)
 			else:
 				#class was not found or more than one class was found
 				#redirect to your homepage
@@ -141,7 +166,9 @@ class ResponseHandler(BaseHandler):
 		accounttype = self.session.get('accounttype')
 		classname = self.session.get('class')
 		categoryname = self.request.get('cname')
+		
 		new_cname = self.request.get('new_cname')
+		
 		if self.validate_user(accountname, accounttype = ADMIN):
 			#user is logged in as accountname qand accounttype is ADMIN
 			user = User.query(User.username == accountname).fetch()[0]
@@ -149,9 +176,9 @@ class ResponseHandler(BaseHandler):
 			if len(classes) == 1:
 				classy = classes[0]
 				
-				if categoryname != 'none' and categoryname != '':
+				if self.request.get('add_to_category') == '1' and categoryname != '':
 				
-					if categoryname == 'newCategory' and new_cname != '':
+					if categoryname == 'Default' and new_cname != '':
 						categoryname = new_cname
 						
 					category = Category.query(Category.name == categoryname, ancestor=classy.key).fetch()
@@ -160,6 +187,7 @@ class ResponseHandler(BaseHandler):
 					elif len(category) == 0:
 						category = Category(name=categoryname, parent=classy.key)
 						category.put()
+						time.sleep(2)
 					else:
 						category = None
 					if category != None:

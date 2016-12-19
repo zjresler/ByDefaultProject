@@ -79,6 +79,9 @@ class User(ndb.Model):
 		elif self.accounttype == STUDENT:
 			return Question.query(Question.classUID == classUID, ancestor=self.key).fetch()
 		return []
+	@property
+	def instructors(self):
+		return User.query(User.accounttype == ADMIN).fetch()
 		
 class Question(ndb.Model):
 	respondentUID		= ndb.KeyProperty(User)

@@ -1,66 +1,32 @@
-<!DOCTYPE html>
-<!--
-CLASSES USED:
-	bannerArea: attached to <div>
-		div containing banner elements
-		
-	bannerImage: attached to <img>
-		refers to the banner image used at the top of the screen
-	
-	bannerButton: attached to <button>
-		refers to the buttons on the banner
-		
-		ids:
-			login, viewQuestions, viewFAQ
-
-	question:
-		refers to a link to a web page
--->
 <html>
 <head>
 	<title>{{title}}</title>
 	<link rel="stylesheet" type="text/css" href="/css/BeAll.css">
 </head>
 <body>
-	<h1 id="SysName">By Default</h1>
-	<h2 id="FAQ">Review Open Questions</h2>
-	<div class="bannerArea">
-        <!--<img class="bannerImage"src="banner.png" alt="System Name">-->
-        Welcome {{accountname}}
-        <form action='/logout' method='GET'><input class="bannerButton" type="submit" value="Logout"></form>
-        <form action='/PastQA' method='GET'><input class="bannerButton" type="submit" value="View Questions"></form>
-        <form action='/faq' method='GET'><input class="bannerButton" type="submit"  value="View FAQ"></form>
-    </div>
-	<!--
-	<form class="SearchFAQForm">
-		Search The FAQ : <input class="single_line_text_field" type="text" name="faqSearch">
-		<input class="button" type="submit" value="Search">
-	</form>
-	-->
-	<table class="questionAnswerArea">
-		<tr class="question">
-			{%if instructor%}
-				<th>Username</th>
-			{%endif%}
-			<th>Question</th><th>Response</th></tr>
+	<div class = "bodyArea">
+		<h2 class="pagehead">Review Open Questions</h2>
 		
-		{%for q in questions%}
-			<tr class="question">
-				{%if instructor%}
-					<td>{{q.key.parent().get().username}}</td>
-				{%endif%}
-				<td>{{q.message}}</td><td>{{q.response}}</td>
+		{% if questions|length == 0 %}
+			<h3 class="pagehead">You have no questions.</h3>
+		{% else %}
+			<table id="pastqa_table" class="center">
+				<tr class="pastqa_cell" ><th class="pastqa_cell">Student</th><th class="pastqa_cell">Question</th><th class="pastqa_cell"></th></tr>
+				{%for q in questions %}
+				<tr style={% if loop.index0%2 == 0 %} "background-color: rgb(0,120,255);" {% else %} "background-color: lightblue;" {% endif %} class="pastqa_cell">
+					<td class="pastqa_cell">{{q.key.parent().get().username}}</td>
+					<td class="pastqa_cell">{{q.message}}</td>
+					<td class="pastqa_cell"><form action='/respond' method = 'get'>
+								<input type = 'hidden' name = 'questionkey' value='{{q.key.urlsafe()}}'/>
+								<input type ='submit' value = 'Respond'/>
+							</form></td>
+				</tr>
 				
-					
-						<td><form action='/respond' method = 'get'>
-							<input type = 'hidden' name = 'questionkey' value='{{q.key.urlsafe()}}'/>
-							<input type ='submit' name = 'Respond' value = 'Respond'/>
-						</form></td>
-			
-			
-			</tr>
-		{%endfor%}
-	</table>
-
+				{%endfor%}
+				
+			</table>
+		{% endif %}
+	</div>
+	{{banner}}
 </body>
 </html>

@@ -1,6 +1,6 @@
-<!DOCTYPE html>
 <html>
 <head>
+<link type="text/css" rel="stylesheet" href="/css/BeAll.css">
 <style>
 table {
     font-family: arial, sans-serif;
@@ -30,24 +30,21 @@ footer {
 
 </head>
 <body>
-
-<table>
-  <tr>
-    <th>Email Address</th>
-    <th>Temporary Password</th>
-  </tr>
-  {% for entry in log %}
-  <tr>
-    <td>{{ entry[0] }}</td>
-    <td>{{ entry[1] }}</td>
-  </tr>
-  {% endfor %}
-</table>
-
-<br>
-<form action='/registrationhomepage'>
-    <input id="toHome" type="submit" value=""><strong>Return to ACCOUNT ADMINISTRATION</strong>
-</form>
+	<div class="bodyArea">
+		<table class="center">
+			<tr>
+				<th>Email Address</th>
+				<th>Temporary Password</th>
+			</tr>
+			{% for entry in log %}
+				<tr>
+					<td>{{ entry[0] }}</td>
+					<td>{{ entry[1] }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		<footer>Retain for your records: Password information necessary for the users' initial login.</footer>
+	</div>
+	{{banner}}
 </body>
-<footer>Retain for your records: Password information necessary for the users' initial login.</footer>
 </html>

@@ -6,6 +6,12 @@ STRINGS = {
 	'QKEY_CORRUPT':	'The question key is corrupt.', #bad question key message
 	'RSUBMIT_FAIL': 'There was an unexpected error submitting the response.', #response submit failure message
 	'RSUBMIT_SUCCESS': 'Response submitted successfully!', #response submit success message
+	'DSUBMIT_SUCCESS': 'Data was submitted successfully!',
+	'DSUBMIT_NO_SELECTION': 'You did not select a user to edit.',
+	'DSUBMIT_NO_CLASS_SELECTED': 'No class was selected.',
+	'DSUBMIT_BAD_DATA': 'Data failed to validate.',
+	'DSUBMIT_FAILED_ADD_CLASS': 'Failed it add user to class because reasons, will probably work if you try again...<br/>(Google app engine is poo).',
+	'DSUBMIT_ACCT_SUCCESS': 'Account Registered Successfully',
 }
 #account types
 ADMIN	= 'instructor'	#instructor accounttype string
@@ -26,23 +32,33 @@ F_TEST_OUT = './html/test_output.html' #this isnt used because gae is poo
 
 #banner parts
 BANNER_DEFAULT_0 = """
+	<img id="bannerimg" src="/texture/banner.png" alt="banner image">
 	<h1 id="SysName">By Default</h1>
 	<div class=\"bannerArea\">
+	
+	
+	<table id = "bannerTable" ><tr>
 """ #add greeting with accountname after this string
 BANNER_LOGOUT = """
-	<form action="/logout" method="GET"><input type="submit" value="Logout"></form>
+	<td><form action="/logout" method="GET"><input type="submit" value="Logout"></form></td>
+"""
+BANNER_LOGIN = """
+	<td><form action="/" method="GET"><input type="submit" value="Login"></form></td>
 """
 BANNER_VIEW_FAQ = """
-	<form action="/faq" method="GET"><input class="bannerButton" type="submit"  value="View FAQ"></form>
+	<td><form action="/faq" method="GET"><input class="bannerButton" type="submit"  value="View FAQ"></form></td>
 """
 BANNER_PASTQA ="""
-	<form action="/PastQA" method="GET"><input class="bannerButton" type="submit" value="View Questions"></form>
+	<td><form action="/PastQA" method="GET"><input class="bannerButton" type="submit" value="View Questions"></form></td>
 """
 BANNER_STHOME ="""
-	<form action="/studenthomepage" method="GET"><input type="submit" value="Home"></form>
+	<td><form action="/studenthomepage" method="GET"><input type="submit" value="Home"></form></td>
 """
 BANNER_INHOME = """
-	<form action="/instructorhomepage" method="GET"><input type="submit" value="Home"></form>
+	<td><form action="/instructorhomepage" method="GET"><input type="submit" value="Home"></form></td>
 """
-BANNER_END = """</div>
+BANNER_AHOME = """
+	<td><form action="/registrationhomepage" method="GET"><input type="submit" value="Home"></form></td>
+"""
+BANNER_END = """</tr></table></div>
 """

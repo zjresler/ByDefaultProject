@@ -45,6 +45,19 @@ class ViewQuestionsHandler(BaseHandler):
 
 
 class PastQAHandler(BaseHandler):
+	template_path_get = './html/PastQA.html'
+	template_path_post= ''
+	def draw(self, user, template_values={}):
+		template_values['banner'] = self.build_banner(user)
+		if self.request.method == 'GET':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_get)
+			self.response.write(template.render(template_values))
+		elif self.request.method == 'POST':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_post)
+			self.response.write(template.render(template_values))
+		else:
+			exit('Write method called with invalid method.')
+		
 	def get(self):
 		username = self.session.get('account')
 		accountname = self.session.get('account')
@@ -61,28 +74,49 @@ class PastQAHandler(BaseHandler):
 			classes = Class.query(Class.classname == class_get).fetch()
 			#classname = user.classlist
 			if accounttype == STUDENT:
-				que = Question.query(Question.senderUID == user_key, Question.classUID == classes[0].key).fetch()		
+				que = user_key.get().questions					
+#				if len(classes) == 0:
+#
+#				else:
+#					que = Question.query(Question.classUID == classes[0].key, ancestor=user_key).fetch()
 				template_values = {'title': 'Past Questions & Answers','accounttype': accounttype,'accountname' : accountname}
 				template_values['questions'] = que
 				template = JINJA_ENVIRONMENT.get_template('./html/PastQA.html')
-				self.response.write(template.render(template_values))
+				self.draw(user, template_values)
 			elif accounttype == ADMIN:
-				que = Question.query(Question.respondentUID == user_key, Question.classUID == classes[0].key).fetch()		
+				que = user_key.get().questions
+#				if len(classes) == 0:
+#				
+#				else:
+#					que = Question.query(Question.respondentUID == user_key, Question.classUID == classes[0].key).fetch()	
 				template_values = {'title': 'Past Questions & Answers','accounttype': accounttype,'accountname' : accountname}
 				template_values['questions'] = que
 				template = JINJA_ENVIRONMENT.get_template('./html/PastQA.html')
-				self.response.write(template.render(template_values))
+				self.draw(user, template_values)
 			else:
-				self.response.write(accounttype+'<br/>')
+				
 				super(PastQAHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
 				
 			
 		else:
 			super(PastQAHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
-			exit(1)
-		#self.response.write(template.render(template_values))
+		
 class ReviewHandler(BaseHandler):
-   def post(self):
+
+	template_path_get = ''
+	template_path_post= './html/review.html'
+	
+	def draw(self, user, template_values={}):
+		template_values['banner'] = self.build_banner(user)
+		if self.request.method == 'GET':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_get)
+			self.response.write(template.render(template_values))
+		elif self.request.method == 'POST':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_post)
+			self.response.write(template.render(template_values))
+		else:
+			exit('Write method called with invalid method.')
+	def post(self):
 		username = self.session.get('account')
 		accounttype = self.session.get('accounttype')
 		classname = self.request.get('class')
@@ -102,7 +136,7 @@ class ReviewHandler(BaseHandler):
 			user_key = user.key
 			
 			if user.accounttype == 'student':
-				template_values['questions'] = Question.query(Question.senderUID == user_key, Question.classUID == classy.key).fetch()
+				template_values['questions'] = Question.query(Question.classUID == classy.key, ancestor = user_key).fetch()
 				template_values['admin'] = False
 				template_values['student'] = True
 			elif user.accounttype == 'instructor':
@@ -113,7 +147,7 @@ class ReviewHandler(BaseHandler):
 				super(ReviewHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
 				
 			template = JINJA_ENVIRONMENT.get_template('./html/review.html')
-			self.response.write(template.render(template_values))
+			self.draw(user, template_values)
 		else:
 			super(ReviewHandler, self).error_redirect('INVALID_LOGIN_STATE', '/')
 

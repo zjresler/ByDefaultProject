@@ -1,39 +1,38 @@
 <html>
 <head>
+<link type="text/css" rel="stylesheet" href="/css/BeAll.css">
 <title>register page</title></head>
 <body>
-Register your student account:
 
-<form action='/register' method='POST' id='userform'>
+	<div class="bodyArea">
+		Create new user:
 
-
-			User Name: <br>
-			<input  type ="text" name="username1" disabled value='{{username}}' /><br>
-			<input  type ="hidden" name="username"  value='{{username}}' /><br>
-			
-			Email: <br>
-			<input type="text" name ="email" /><br>
-
-			First Name: <br>
-			<input  type ="text" name="firstname"/>*<br>
-
-			Last Name: <br>
-			<input  type="text" name="lastname"/>*<br>
-
-			Password:<br>
-			<input type="password" name="password"/>*<br>
-			
-			Retype Password:<br>
-			<input type="password" name="password2"/>*<br>
-			
-			<input type="hidden" name ="classkey" value="{{classkey}}" />
+		<form action='/register' method='POST' id='userform'>
 
 
-<input type="submit" value="Register">{{error}}
+					{{error}}<br>
+					User Name: <br>
+					<input  type ="text" name="username1" disabled value='{{username}}' /><br>
+					<input  type ="hidden" name="username"  value='{{username}}' /><br>
 
-</form>
+					First Name: <br>
+					<input  type ="text" name="firstname"/>*<br>
+
+					Last Name: <br>
+					<input  type="text" name="lastname"/>*<br>
 
 
+					Password:<br>
+					<input type="password" name="password"/>*<br>
+					
+					<input type="hidden" name ="classkey" value="{{classkey}}" />
+
+
+		<input type="submit" value="Register">
+
+
+		</form>
+	</div>
+	{{banner}}
 </body>
-
 </html>

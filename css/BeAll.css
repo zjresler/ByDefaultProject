@@ -2,10 +2,19 @@ body{
 	font-family: Rockwell;
     background-color: lightblue;
 }
+#bannerimg{
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100px;
+}
 #SysName{
-	border-style: solid;
-	border-color: rgb(0,120,255);
-	background-color: rgb(0,120,255);
+	position: fixed;
+	text-align: center;
+	top: 0px;
+	width: 100%;
+	height: 20%;
 	color: white;
 }
 #Reg{
@@ -29,10 +38,13 @@ body{
 	margin-top: 30px;
 }
 #title{
+	margin-top: -50px;
+	
+/*	
 	position: fixed;
 	margin-left: 50px;
-	margin-top: -50px;
 	border-bottom: ridge;
+*/	
 }
 #AskTitle{
 	position: fixed;
@@ -42,17 +54,8 @@ body{
 #login{
 	margin-bottom: 20px;
 	padding: 10px 20px;
-}
-#container{
-	position: fixed;
-	border-bottom-style: ridge;
-	position: fixed;
-	left: 45%;
-	top:45%;
-	margin-left: -100px;
-	margin-top: -100px;
-	border-bottom: ridge;
-	
+	width: 200px;
+	height: 40px;
 }
 #inReg{
 	margin-bottom: 20px;
@@ -61,24 +64,14 @@ body{
     margin: 8px 15px;
     box-sizing: border-box;
 }
-button{
-	margin-bottom: 20px;
-	padding: 10px 20px;
-}
 .bannerArea{
-	position: absolute;
-	right: 5%;
+	position: fixed;
+	margin: 0 auto;
+	top: 89px;
+	width: 100%;
 }
 #askQuestionForm{
-	position: fixed;
-	border-bottom-style: ridge;
-	position: fixed;
-	left: 45%;
-	top:45%;
-	margin-left: -100px;
-	margin-top: -100px;
-	margin-bottom: 20px;
-	padding: 10px 20px;
+
 }
 .form_ANI{
 	width: 400px; 
@@ -99,7 +92,7 @@ button{
 	height: 0; 
 	line-height: 0; 
 }
-input[type=submit]{
+input[type=submit], button[type=submit]{
 	
 	background-color: rgb(0,120,255);
 	color: white;
@@ -111,16 +104,21 @@ input[type=submit]{
 	font-family: Rockwell;
 }
 
-input[type=submit]:hover {
-    background-color: rgb(0,120,255);
+input[type=submit]:hover, button[type=submit]:hover{
+    background-color: rgb(50,150,255);
+}
+input[type=text]{
+	font-family: rockwell;
 }
 
-
+	
 .questionAnswerArea{
-	border-left: ridge;
-	margin: 8px 40px;
+	margin: 0 auto;
 	padding-left: 10px;
+	width: 100%;
+	/*margin: 8px 40px;
 	margin-top: 125px;
+	border-left: ridge;*/
 }
 .question{
 	margin-bottom: 20px;
@@ -138,16 +136,23 @@ input[type=submit]:hover {
 }
 .QAForm{
 	
-	margin-bottom: 20px;
-	padding-top: 10px ;
+	
 }
+#dummy{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	height: 100px;
+}
+#dummylabel{
+	text-align: left;
+}
+
 #manualResponse{
-	position: fixed;
-	margin-left: 60px;
-	margin-top: 200px;
+	
 }
-#catagory{
-	margin-bottom: 20px;
+#category{
+	width: 100%;
+	text-align: center;
 }
 #FAQResponse{
 	position: fixed;
@@ -158,16 +163,26 @@ input[type=submit]:hover {
 	margin-top: 20px;
 }
 .displayText{
-	position: fixed;
-	margin-bottom: 20px;
-	padding: 10px 20px;
-	margin-left: 75px;
-	margin-top: 75px;
+	background: transparent;
+	border: none;
+	text-align: center;
+	font-family: rockwell;
+	font-size: 12pt;
+	resize: none;
 }
-#Resp{
-	position: fixed;
+textarea.displayText:disabled{
+	color: black;
+}
+h2.pagehead{
+	/*position: fixed;
 	border-bottom: ridge;
 	margin-left: 60px;
+	*/
+	
+	margin-left: 0 auto;
+	margin-right: 0 auto;
+	margin-top: 0 auto;
+	margin-bottom: 30px;
 }
 #responseType{
 	position: fixed;
@@ -188,15 +203,106 @@ input[type=submit]:hover {
 	color: blue;
 	background-color: gray;
 }
-#button{
-	background-color: rgb(0,120,255);
-	color: white;
-	padding: 14px 20px;
-	margin: 8px 0;
-	border: none;
-	border-radius: 0px;
-	cursor: pointer;
-	font-family: Rockwell;
-	 margin-left: 610px;
-    margin-top: 400px;
+
+.bodyArea{
+	position: relative;
+	top: 200px;
+	text-align: center;
+}
+.classLink{
+	width: 100%;
+	height: 100%;
+	background-color: lightblue;
+}
+.notBanner{
+	padding: 10px;
+	text-align: left;
+}
+
+table.center{
+	margin: 0 auto;
+}
+div.center{
+	margin-left: auto;
+	margin-right: auto;
+	color: black;
+	text-align:center;
+}
+
+#bannerTable{
+	margin: 0 auto;
+}
+.messageArea{
+	width: 100%;
+	height: 100%;
+}
+.console{
+	visibility: hidden;
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+}
+.consoleTable{
+	background-color: white;
+}
+#new_cname_textbox{
+	width: 100%;
+}
+table#faq_table{
+	
+}
+#question, #response{
+	text-align: left;
+	margin: 0 auto;
+	font-size: 12pt
+}
+.off{
+	visibility: hidden;
+	width: 0px
+}
+
+th.center{
+	text-align: center;
+}
+th.faq_cell{
+	border-bottom: 2px solid black;
+	border-left: 0px solid black;
+	border-right: 0px solid black;
+}
+input:disabled {
+	color: black;
+
+}
+table {
+	border-collapse: collapse;
+}
+table.pastqa_table{
+	
+
+}
+th.pastqa_cell, td.pastqa_cell,th.faq_cell, td.faq_cell{
+	text-align: center;
+	border-right: 0px solid black;
+	word-wrap: break-word;
+	max-width: 450px;
+	padding-left: 35px;
+	padding-right: 35px;
+	padding-top: 20px;
+	padding-bottom: 15px;
+	
+}
+th.pastqa_cell{
+	border-bottom: 2px solid black;
+	border-left: 0px solid black;
+	border-right: 0px solid black;
+}
+textarea#question.displayText, textarea#response.displayText{
+	width: 20em;
+	height: 5em;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+td.respond_check{
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
