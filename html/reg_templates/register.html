@@ -1,11 +1,11 @@
 <html>
 <head>
 <link type="text/css" rel="stylesheet" href="/css/BeAll.css">
-<title>register page</title></head>
+<title>student registration</title></head>
 <body>
 
 	<div class="bodyArea">
-		Create new user:
+		Create your account:
 
 		<form action='/register' method='POST' id='userform'>
 
@@ -24,6 +24,9 @@
 
 					Password:<br>
 					<input type="password" name="password"/>*<br>
+					
+					Retype Password:<br>
+					<input type="password" name="password2"/>*<br>
 					
 					<input type="hidden" name ="classkey" value="{{classkey}}" />
 
