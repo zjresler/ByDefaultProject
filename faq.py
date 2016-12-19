@@ -74,6 +74,37 @@ class FAQHandler(BaseHandler):
 		self.draw(user, template_values)
 
 
+class FAQPublicHandler(BaseHandler):
 
+	template_path_get = './html/FAQ.html'
+	
+	def draw(self, user, template_values={}):
+		template_values['banner'] = self.build_banner(user)
+		if self.request.method == 'GET':
+			template = JINJA_ENVIRONMENT.get_template(self.template_path_get)
+			self.response.write(template.render(template_values))
+		else:
+			exit('Write method called with invalid method.')
+	def get(self):
+		class_get = self.request.get_all('Class')
+		classname = class_get[0]
+		
+		username = ''
+		accounttype = ''
+		user = None
+		if 'account' in self.session and self.session['account']!='':
+			username = self.session.get('account')
+			user = User.query(User.username == username).fetch()
+			if len(user) == 1:
+				accounttype = user[0].accounttype
+				user = user[0]
+			else:
+				user = None
+		class_get = Class.query(Class.classname
+								== class_get[0]).fetch()[0]
+		theclass = class_get.FAQ
+
+		template_values = {'class': theclass,'classname': classname}
+		self.draw(user, template_values)
 			
 
