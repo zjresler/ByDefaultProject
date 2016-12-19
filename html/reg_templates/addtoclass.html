@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<title>  Add Instructor to Class </title>
+		<link type="text/css" rel="stylesheet" href="/css/BeAll.css">
+	</head>
+
+	<body>
+		<h1 id="SysName">By Default</h1>
+		
+
+		<div id="container">  
+			<h1 id ="title"> Add instructor to existing class </h1>
+			<form action="/addtoclass" method="POST">
+			<table>
+			<tr><td>Instructor</td><td>Class</td></tr>
+			<tr><td>
+				<select name="instructorAssigned">
+				{% for instructor in instructors %}
+  				<option value="{{instructor.username}}">{{instructor.username}}</option> 
+  				{% endfor %}
+				</select>
+				</td>
+				<td>
+				<select name="classAssigned">
+				{% for class in classes %}
+  				<option value="{{class.classname}}">{{class.classname}}</option> 
+  				{% endfor %}
+				</select>
+				</td>
+			</tr>
+			</table>
+				<div id="lower">
+					<input type="submit" id="loginSubmit" value="Add To Class">
+				</div><!--/ lower-->
+			</form>
+		</div>
+
+	</body>
+</html>
